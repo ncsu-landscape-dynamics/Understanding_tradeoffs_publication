@@ -39,6 +39,8 @@ wc_and_dsv <-
   writeRaster(wc, paste0(outpath, "wc_", year, "_", day, ".tif"))
   writeRaster(wc_sd, paste0(outpath, "wc_sd_", year, "_", day, ".tif"))
   writeRaster(dsv_score, paste0(outpath, "dsv_score_", year, "_", day, ".tif"))
+  # writeRaster(hourly_temp, paste0(outpath, "hourly_temp_", year, "_", day, ".tif"))
+  # writeRaster(hourly_rh, paste0(outpath, "hourly_rh_", year, "_", day, ".tif"))
   success <- TRUE
   return(success)
 }

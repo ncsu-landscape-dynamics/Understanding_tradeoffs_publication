@@ -1,7 +1,9 @@
 library(terra)
 library(doParallel)
+source("dsv_calc.R")
+source("wc_and_dsv.R")
 
-dayl <- rast("~/Google Drive/Shared drives/John_Polo_Dissertation/MS_1/data/lateblight/rasterinputs/dayl09.tif")
+dayl <- rast("//rs.oit.ncsu.edu/rs1/researchers/c/cmjone25/Late_blight/Weather_data/2009/dayl09.tif")
 rast_size <- nlyr(dayl)
 rm(dayl)
 
@@ -29,23 +31,33 @@ temp_matrix <-
            25, 100, 0.0),
          ncol = 3, byrow = TRUE)
 
+# can change RH threshold depending on disease
 rh_threshold <- 90
-rh_matrix <- matrix(c(0, rh_threshold, 0, rh_threshold, Inf, 1), nrow = 2, ncol = 3, byrow = TRUE)
+rh_matrix <- matrix(c(0, rh_threshold, 0, rh_threshold, Inf, 1), 
+                    nrow = 2, ncol = 3, byrow = TRUE)
 
-outpath <- "~/Google Drive/Shared drives/John_Polo_Dissertation/MS_1/data/lateblight/rasterinputs/outputs/"
+## filepaths and files
+outpath <- "//rs.oit.ncsu.edu/rs1/researchers/c/cmjone25/Late_blight/Weather_data/2009/outputs/"
+inpath <- "//rs.oit.ncsu.edu/rs1/researchers/c/cmjone25/Late_blight/Weather_data/2009/"
+dayl_file <- paste0(inpath, "dayl09_hour.tif")
+tmin_file <- paste0(inpath, "tmin09.tif")
+tmax_file <- paste0(inpath, "tmax09.tif")
+vp_file <- paste0(inpath, "vp09.tif")
+tmaxb_file <- paste0(inpath, "tmaxb09.tif")
+tmina_file <- paste0(inpath, "tmina09.tif")
 year <- 2009
 
-cl <- makeCluster(7) # on Darwin
+cl <- makeCluster(7)
 registerDoParallel(cl)
-# Not sure if I'm supposed to use the .combine = c... tried a smaller example without and it created list of rasters.
-temdel <- foreach (i = 1:7, .combine = c, .packages = c("terra")) %dopar% {
-  dayl <- rast("~/Google Drive/Shared drives/John_Polo_Dissertation/MS_1/data/lateblight/rasterinputs/dayl09_hour.tif")[[i]]
-  tmin <- rast("~/Google Drive/Shared drives/John_Polo_Dissertation/MS_1/data/lateblight/rasterinputs/tmin09.tif")[[i]]
-  tmax <- rast("~/Google Drive/Shared drives/John_Polo_Dissertation/MS_1/data/lateblight/rasterinputs/tmax09.tif")[[i]]
-  vp <- rast("~/Google Drive/Shared drives/John_Polo_Dissertation/MS_1/data/lateblight/rasterinputs/vp09.tif")[[i]]
-  tmaxb <- rast("~/Google Drive/Shared drives/John_Polo_Dissertation/MS_1/data/lateblight/rasterinputs/tmaxb09.tif")[[i]]
-  tmina <- rast("~/Google Drive/Shared drives/John_Polo_Dissertation/MS_1/data/lateblight/rasterinputs/tmina09.tif")[[i]]
 
+# need to change 7 to rast_size variable.
+temdel <- foreach (i = 1:7, .combine = c, .packages = c("terra")) %dopar% {
+  dayl <- rast(dayl_file)[[i]]
+  tmin <- rast(tmin_file)[[i]]
+  tmax <- rast(tmax_file)[[i]]
+  vp <- rast(vp_file)[[i]]
+  tmaxb <- rast(tmaxb_file)[[i]]
+  tmina <- rast(tmina_file)[[i]]
 
   zero_rast <- dayl
   values(zero_rast) <- 0
