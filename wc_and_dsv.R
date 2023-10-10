@@ -34,7 +34,7 @@ wc_and_dsv <-
   wc_sd <- app(hourly_wc, sd)
 
   tmean <- (tmax + tmin) / 2
-  dsv_score <- dsv(tmean, hourly_rh_binary)
+  dsv_score <- dsv(tmean, number_hours_above_rh_threshold)
 
   writeRaster(wc, paste0(outpath, "wc_", year, "_", day, ".tif"))
   writeRaster(wc_sd, paste0(outpath, "wc_sd_", year, "_", day, ".tif"))
