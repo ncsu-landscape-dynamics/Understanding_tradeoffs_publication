@@ -3,9 +3,9 @@ library(doParallel)
 source("dsv_calc_app.R")
 source("temp_hour.R")
 
-# dayl <- rast("//rs.oit.ncsu.edu/rs1/researchers/c/cmjone25/Late_blight/Weather_data/2009/dayl09_hour.tif")
-# rast_size <- nlyr(dayl)
-# rm(dayl)
+dayl <- rast("//rs.oit.ncsu.edu/rs1/researchers/c/cmjone25/Late_blight/Weather_data/2009/dayl09_hour.tif")
+rast_size <- nlyr(dayl)
+rm(dayl)
 
 temp_matrix <-
   matrix(c(-100, 3, 0.0,
@@ -54,7 +54,7 @@ cl <- makeCluster(20)
 registerDoParallel(cl)
 start_time <- Sys.time()
 # need to change 7 to rast_size variable.
-temdel <- foreach (i = 21:365, .combine = c, .packages = c("terra")) %dopar% {
+temdel <- foreach (i = 242:rast_size, .combine = c, .packages = c("terra")) %dopar% {
   dayl <- rast(dayl_file)[[i]]
   tmin <- rast(tmin_file)[[i]]
   tmax <- rast(tmax_file)[[i]]
