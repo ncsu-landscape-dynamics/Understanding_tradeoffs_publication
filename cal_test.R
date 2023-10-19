@@ -50,11 +50,29 @@ sunrise_file <- paste0(inpath, "sunrise.tif")
 sunset_file <- paste0(inpath, "sunset.tif")
 year <- 2009
 
-cl <- makeCluster(20)
+filelist <- list.files(outpath, pattern = "wc_sd_")
+
+if (length(filelist) > 0) {
+  # creat days from missed days
+  splitfront <- strsplit(filelist, paste0("wc_sd_", year, "_"))
+  back <- matrix(unlist(splitfront), ncol = 2, byrow = TRUE)[,2]
+  mid <- as.matrix(unlist(strsplit(back, ".tif")))
+  mid <- as.numeric(mid)
+  dayslist <- c(1:365)
+  
+  "%notin%" <- Negate("%in%")
+  
+  days <- dayslist[dayslist %notin% mid]
+} else {
+  days <- c(1:365)
+}
+
+cl <- makeCluster(10)
 registerDoParallel(cl)
 start_time <- Sys.time()
+
 # need to change 7 to rast_size variable.
-temdel <- foreach (i = 242:rast_size, .combine = c, .packages = c("terra")) %dopar% {
+temdel <- foreach (i = days, .combine = c, .packages = c("terra")) %dopar% {
   dayl <- rast(dayl_file)[[i]]
   tmin <- rast(tmin_file)[[i]]
   tmax <- rast(tmax_file)[[i]]
