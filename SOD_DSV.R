@@ -24,7 +24,6 @@ sodvf2[4,] <- c(1, 1*0.04835)
 sodvf2 <- sodvf2[sodvf2$dv > 0.0,]
 sodvf2[9:19, "dv"] <- sodvf2[9:19, "t"] * 0.0155
 
-
 thresh1 <- 0.25*max(sodvf2$dv)
 thresh2 <- 0.5*max(sodvf2$dv)
 thresh3 <- 0.75*max(sodvf2$dv)
@@ -58,8 +57,7 @@ r0 <- rast(txl[1])
 co1 <- vect(co1)
 co1 <- project(co1, y=crs(r0))
 
-codsv <- list()
-
+# Function for use in for loop
 dsvf <- function(i){
   mx = rast(txl[i])
   mn = rast(tnl[i])
@@ -75,8 +73,58 @@ dsvf <- function(i){
   return(codsv)
 }
 
+tdsv <- list()
 
 tdsv <- for(i in 1:length(txl)){
   dsvf(i)
+}
+
+# Project the DSVs to EPSG 3857
+for(i in 1:12){
+indq = seq(1, 4380, by=365)
+temr = r1[[indq[i]:(indq[i]+364)]]
+r10[i] = project(temr, crs(r2))
+}
+
+# The resolution was wrong after projecting. 
+# Used one of the weather rasters as a template for resampling in order
+# to have right resolution.
+res1 = list()
+for(i in 1:12){
+  temr = crop(rast(r10[i]), ext(r3), mask=T)
+  res1[i] = resample(temr, r3, method="near")
+}
+
+# Get the list of files for revising further.
+l1 <- list.files("Q:/My Drive/temp/",pattern="soddsvdaily.*tif$", full.names = T)
+
+# Fix some values that resampled as decimal
+rm1 <- matrix(c(0,0.5,0,0.5,1,1,1,1.5,1,1.5,2,2,2,2.5,2,2.5,3,3,3,3.5,3,3.5,4,4),
+              ncol=3, byrow = T)
+
+for(i in 1:length(l1)){
+  temr = rast(l1[i])
+  temr2 = classify(temr, rm1, right=T)
+  writeRaster(temr2, paste0("Q:/My Drive/temp/soddsvdailyrev_", yseq[i],".tif"))
+}
+
+# Cumulative sum of the daily values in DSV.
+cd1 <- list()
+
+l1 <-l1[seq(1,24, by=2)]
+
+for(i in 1:12){
+  cd1[i] = app(rast(l1[i]), cumsum)
+}
+
+# Cumulative counts of DSV/18
+cd2 <- list()
+
+for(i in 1:12){
+  cd2[i] = app(rast(cd1[i]), function(x) floor(x / 18))
+}
+
+for(i in 1:12){
+writeRaster(rast(cd2[i]), paste0("Q:/My Drive/temp/cumudsv_18_",yseq[i],".tif"))
 }
 
