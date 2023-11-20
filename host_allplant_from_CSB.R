@@ -4,14 +4,14 @@ library(tidyverse)
 library(terra)
 
 # Read in the CSB
-csb0916 <- st_read(<path to crop sequence boundary database>)
+csb0916 <- read_sf(<path to crop sequence boundary database>)
 
 # Get the study area geography needed for late blight
 st1 <- states()
-co1 <- counties(c("CT", "DE", "FL", "GA", "IL", "IN", "KY", "MA", "MD", "ME", "MI",
+stl1 <- c("CT", "DE", "FL", "GA", "IL", "IN", "KY", "MA", "MD", "ME", "MI",
                   "NC", "NH", "NJ", "NY", "OH", "PA", "RI", "SC",
-                  "TN", "VA", "VT", "WI", "WV", "AL"))
-st1 <- st1[st1$STATEFP %in% co1$STATEFP,]
+                  "TN", "VA", "VT", "WI", "WV", "AL")
+st1 <- st1[st1$STATEFP %in% stl1,]
 
 # Subset to the host and study area
 csbhost09 <- csb0916[csb0916$STATEFP %in% st1$STATEFP & csb0916$R09 %in% c(43,54),c()]
@@ -64,8 +64,6 @@ host2ras <- function(x, y){
   h2v[h2v > 0] = 100
   h2v = project(h2v, y=crs(r1))
   h2r = rasterize(h2v, r1, field=x[,])
-  # Match resolution in other raster inputs
-  h2r = resample(h2r, r1, method="near") 
   writeRaster(hr2, <path to save tif>)
 }
 
