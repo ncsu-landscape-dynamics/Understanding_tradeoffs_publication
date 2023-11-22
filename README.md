@@ -11,4 +11,4 @@ Late blight was also modeled with a weather risk model called a degree severity 
 ### SOD
 To forecast SOD with PoPS, we used infection data collected by the Oregon Department of Forestry and U.S. Forest Service in Coos County, Oregon and the 3 surrounding Oregon counties. Weather inputs were Daymet temperatures and precipitation. Host and total populations data came from the ODF and USFS.
 
-SOD was modeled with a DSV that used the same range of scores as that of late blight. The same mean temperature and precipitation data as those for late blight were used in the if-then logic for the DSV for SOD.
+SOD was modeled with a DSV that used the same range of scores as that of late blight, however with the thresholds at different precipitation and temperature values than those of late blight. Mean temperature, calculated from Daymet temperature data, and Daymet precipitation were used in the if-then logic for the DSV for SOD.
