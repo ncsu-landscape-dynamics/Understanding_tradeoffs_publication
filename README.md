@@ -9,6 +9,6 @@ To forecast late blight, infection data came from a data set that combined infec
 Late blight was also modeled with a weather risk model called a degree severity value. This model used the same mean temperature and relative humdity estimates used in PoPS. The DSV uses if-then logic to assign a score from 0-4, 0 equating to no risk and 4, infection imminent. 
 
 ### SOD
-To forecast SOD with PoPS, we used infection data collected by the Oregon Department of Forestry and U.S. Forest Service in Coos County, Oregon and the 3 surrounding Oregon counties. Weather inputs were Daymet temperatures and precipition. Host and total populations data came from the ODF and USFS.
+To forecast SOD with PoPS, we used infection data collected by the Oregon Department of Forestry and U.S. Forest Service in Coos County, Oregon and the 3 surrounding Oregon counties. Weather inputs were Daymet temperatures and precipitation. Host and total populations data came from the ODF and USFS.
 
 SOD was modeled with a DSV that used the same range of scores as that of late blight. The same mean temperature and precipitation data as those for late blight were used in the if-then logic for the DSV for SOD.
