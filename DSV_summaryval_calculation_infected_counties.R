@@ -15,9 +15,9 @@ co1 <- vect(".../counties3857.shp")
 dsvext <- function(infdf, indx, cr1, dr1, ...){ #cr1 = cumul, dr1 = daily
   print(indx)
   # Get the days/durations relevant to each period
-  sday = as.numeric(infdf$yday)
+  sday = as.numeric(infdf[indx, "yday"])
   print(sday)
-  syr1 = as.numeric(infdf$year)
+  syr1 = as.numeric(infdf[indx, "year"])
   # If sday is < 30 Jan., need to add in previous year's raster. This won't
   # work for before 2009.
   if(sday < 30){
