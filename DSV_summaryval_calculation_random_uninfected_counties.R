@@ -34,7 +34,7 @@ dsvnoinfext <- function(infdf, indx, cr1, dr1, ...){ #cr1 = cumul, dr1 = daily
   # If sday is < 14 Jan., need to add in previous year's raster. This won't
   # work for before 2009.
   if(sday < 30){
-    dr1     = c(rast(l2[grepl((syr1-1), l2)]), dr1)
+    dr1     = c(rast(l1[grepl((syr1-1), l1)]), dr1)
     sday2   = sday + 365
     fortnt  = dr1[[(sday2-13):sday2]]
     fortnt  = app(fortnt, cumsum)
