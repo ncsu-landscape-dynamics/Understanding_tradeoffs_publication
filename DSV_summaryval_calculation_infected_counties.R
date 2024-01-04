@@ -21,8 +21,8 @@ dsvext <- function(infdf, indx, cr1, dr1, ...){ #cr1 = cumul, dr1 = daily
   # If sday is < 30 Jan., need to add in previous year's raster. This won't
   # work for before 2009.
   if(sday < 30){
-    dr1 = c(rast(l2[grepl((syr1-1), l2)]), dr1)
-    cr1 = c(rast(l1[grepl((syr1-1), l1)]), cr1)
+    dr1 = c(rast(l1[grepl((syr1-1), l1)]), dr1)
+    cr1 = c(rast(l2[grepl((syr1-1), l2)]), cr1)
     sday = sday + 365
   } else {
     dr1 = dr1
