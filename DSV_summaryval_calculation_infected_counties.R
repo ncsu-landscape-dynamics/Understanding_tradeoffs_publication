@@ -28,6 +28,29 @@ dsvext <- function(infdf, indx, cr1, dr1, ...){ #cr1 = cumul, dr1 = daily
     dr1 = dr1
     cr1 = cr1
   }
+  
+  # Get the state and county for selected row
+  selecstcty = as.character(infdf[indx, "st_ct"])
+  print(paste0("selectct ", selecstcty))
+  
+  # Use inf2b for buffers around infection coordinates and cobuf for buffers
+  # around county centroids. Both are 20k radius, close to mean of counties in 
+  # study area.
+  if(infdf[indx, "set"] == "usab") {
+    # Infection buffer matching the selected location
+    stecty = inf2b[inf2b$st_ct == selecstcty,]
+    print(paste0("sel cty ", as.character(as.data.frame(stecty)[1,2])))
+  } else {
+    # Infection buffer matching the selected location
+    stecty = cobuf[cobuf$stco == selecstcty,]
+    print(paste0("sel cty ", as.character(as.data.frame(stecty)[1,2])))
+  }
+  
+  # Crop the input rasters 
+  cr1 = crop(cr1, stecty, mask=T)
+  dr1 = crop(dr1, stecty, mask=T)
+  print(Sys.time())
+  # Select layers (days) 
   # The annual cumulative values
   cuml    = cr1[[1:sday]]
   cuml    = cuml[[nlyr(cuml)]]
@@ -39,35 +62,29 @@ dsvext <- function(infdf, indx, cr1, dr1, ...){ #cr1 = cumul, dr1 = daily
   monthly = dr1[[ (sday-29):sday]]
   monthly = app(monthly, cumsum)
   monthly = monthly[[nlyr(monthly)]]
-
-  # Get the state and county for selected row
-  selecstcty = as.character(infdf[indx, "st_ct"])
-  print(paste0("selectct ", selecstcty))
-  # County matching the selected location
-  stecty = co1[co1$stco == selecstcty,]
-  print(paste0("sel cty ", as.character(as.data.frame(stecty)[1,6])))
-  # Crop DSVs to selected county
-  dsvcumlcrp = crop(cuml, stecty, mask=T)
-  dsvftntcrp = crop(fortnt, stecty, mask=T)
-  dsvmnthcrp = crop(monthly, stecty, mask=T)
+  print(Sys.time())
+  #dsvcumlcrp = crop(cuml, stecty, mask=T)
+  #dsvftntcrp = crop(fortnt, stecty, mask=T)
+  #dsvmnthcrp = crop(monthly, stecty, mask=T)
   
   # Calcuate the summary stats for each accumulated period
-  cmlmin = min(freq(dsvcumlcrp)$value)
-  cmlmax = max(freq(dsvcumlcrp)$value)
-  cmlavg = weighted.mean(freq(dsvcumlcrp)$value, freq(dsvcumlcrp)$count)
-  cmlsd = sd(freq(dsvcumlcrp)$value)
-  cmlmed = median(freq(dsvcumlcrp)$value)
-
-  fntmin =  min(freq(dsvftntcrp)$value)
-  fntmax =  max(freq(dsvftntcrp)$value)
-  fntavg = weighted.mean(freq(dsvftntcrp)$value, freq(dsvftntcrp)$count)
-  fntsd =  sd(freq(dsvftntcrp)$value)
-  fntmed = median(freq(dsvftntcrp)$value)
-
-  mnthmin =  min(freq(dsvmnthcrp)$value)
-  mnthavg = weighted.mean(freq(dsvmnthcrp)$value, freq(dsvmnthcrp)$count)
-  mnthsd =  sd(freq(dsvmnthcrp)$value)
-  mnthmed = median(freq(dsvmnthcrp)$value)
+  cmlmin = min(freq(cuml)$value)
+  cmlmax = max(freq(cuml)$value)
+  cmlavg = weighted.mean(freq(cuml)$value, freq(cuml)$count)
+  cmlsd = sd(freq(cuml)$value)
+  cmlmed = median(freq(cuml)$value)
+  
+  fntmin =  min(freq(fortnt)$value)
+  fntmax =  max(freq(fortnt)$value)
+  fntavg = weighted.mean(freq(fortnt)$value, freq(fortnt)$count)
+  fntsd =  sd(freq(fortnt)$value)
+  fntmed = median(freq(fortnt)$value)
+  
+  mnthmin =  min(freq(monthly)$value)
+  mnthmax =  max(freq(monthly)$value)
+  mnthavg = weighted.mean(freq(monthly)$value, freq(monthly)$count)
+  mnthsd =  sd(freq(monthly)$value)
+  mnthmed = median(freq(monthly)$value)
   
   # combine
   ddf1 = data.frame(loc=as.character(infdf[indx,"st_ct"]), date=as.character(infdf[indx,"Samp_date"]),
@@ -77,7 +94,7 @@ dsvext <- function(infdf, indx, cr1, dr1, ...){ #cr1 = cumul, dr1 = daily
                     mnthmin=mnthmin, mnthmax=mnthmax, mnthavg=mnthavg,
                     mnthsd=mnthsd, mthmedian = mnthmed)
   return(ddf1)
-
+  
 }
 
 infx9 <- infx_df %>% filter(year == 2009) %>% arrange(yday)
