@@ -21,11 +21,11 @@ dsvnoinfext <- function(infdf, indx, cr1, dr1, ...){ #cr1 = cumul, dr1 = daily
   sel_df  = infdf[indx, ]
   print(sel_df)
   sel_cty = sel_df$st_ct
-  sel_hzone = as.numeric(sel_df$hardinessz)
+  sel_hzone = as.character(sel_df$zone)
   print(paste0("sel ",sel_hzone))
-  potential_co = co1[co1$hardinessz == sel_hzone,]
+  potential_co = cobuf[cobuf$zone == sel_hzone,]
   complem_zone = potential_co[sample(nrow(potential_co),1),]
-  print(paste0("complement ",as.character(as.data.frame(complem_zone)[,6])))
+  print(paste0("complement ",as.character(as.data.frame(complem_zone)[,2])))
   # Get the days/durations relevant to each period
   sday = as.numeric(sel_df$yday)
   print(sday)
@@ -35,6 +35,7 @@ dsvnoinfext <- function(infdf, indx, cr1, dr1, ...){ #cr1 = cumul, dr1 = daily
   # work for before 2009.
   if(sday < 30){
     dr1     = c(rast(l1[grepl((syr1-1), l1)]), dr1)
+    dr1     = crop(dr1, complem_zone, mask=T)
     sday2   = sday + 365
     fortnt  = dr1[[(sday2-13):sday2]]
     fortnt  = app(fortnt, cumsum)
@@ -44,6 +45,7 @@ dsvnoinfext <- function(infdf, indx, cr1, dr1, ...){ #cr1 = cumul, dr1 = daily
     monthly = monthly[[nlyr(monthly)]]
   } else {
     dr1     = dr1
+    dr1     = crop(dr1, complem_zone, mask=T)
     fortnt  = dr1[[(sday-13):sday]]
     fortnt  = app(fortnt, cumsum)
     fortnt  = fortnt[[nlyr(fortnt)]]
@@ -51,32 +53,29 @@ dsvnoinfext <- function(infdf, indx, cr1, dr1, ...){ #cr1 = cumul, dr1 = daily
     monthly = app(monthly, cumsum)
     monthly = monthly[[nlyr(monthly)]]
   }
-  cuml =   cr1[[1:sday]]
-  cuml =   cuml[[nlyr(cuml)]]
-
+  cr1  = crop(cr1, complem_zone, mask=T)
+  cuml = cr1[[1:sday]]
+  cuml = cuml[[nlyr(cuml)]]
+  
   # Extract summary values from each of the DSV rasters
-  dsvcumlcrp = crop(cuml, complem_zone, mask=T)
-  dsvftntcrp = crop(fortnt, complem_zone, mask=T)
-  dsvmnthcrp = crop(monthly, complem_zone, mask=T)
-
-  cmlmin = min(freq(dsvcumlcrp)$value)
-  cmlmax = max(freq(dsvcumlcrp)$value)
-  cmlavg = weighted.mean(freq(dsvcumlcrp)$value, freq(dsvcumlcrp)$count)
-  cmlsd = sd(freq(dsvcumlcrp)$value)
-  cmlmed = median(freq(dsvcumlcrp)$value)
-
-  fntmin =  min(freq(dsvftntcrp)$value)
-  fntmax =  max(freq(dsvftntcrp)$value)
-  fntavg = weighted.mean(freq(dsvftntcrp)$value, freq(dsvftntcrp)$count)
-  fntsd =  sd(freq(dsvftntcrp)$value)
-  fntmed = median(freq(dsvftntcrp)$value)
-
-  mnthmin =  min(freq(dsvmnthcrp)$value)
-  mnthmax =  max(freq(dsvmnthcrp)$value)
-  mnthavg = weighted.mean(freq(dsvmnthcrp)$value, freq(dsvmnthcrp)$count)
-  mnthsd =  sd(freq(dsvmnthcrp)$value)
-  mnthmed = median(freq(dsvmnthcrp)$value)
-
+  cmlmin = min(freq(cuml)$value)
+  cmlmax = max(freq(cuml)$value)
+  cmlavg = weighted.mean(freq(cuml)$value, freq(cuml)$count)
+  cmlsd = sd(freq(cuml)$value)
+  cmlmed = median(freq(cuml)$value)
+  
+  fntmin =  min(freq(fortnt)$value)
+  fntmax =  max(freq(fortnt)$value)
+  fntavg = weighted.mean(freq(fortnt)$value, freq(fortnt)$count)
+  fntsd =  sd(freq(fortnt)$value)
+  fntmed = median(freq(fortnt)$value)
+  
+  mnthmin =  min(freq(monthly)$value)
+  mnthmax =  max(freq(monthly)$value)
+  mnthavg = weighted.mean(freq(monthly)$value, freq(monthly)$count)
+  mnthsd =  sd(freq(monthly)$value)
+  mnthmed = median(freq(monthly)$value)
+  
   ddf1 = data.frame(loc=as.character(infdf[indx,"st_ct"]),
                     date=as.character(infdf[indx,"Samp_date"]),
                     cmlmin=cmlmin, cmlmax=cmlmax, cmlavg=cmlavg, cmlsd=cmlsd,
@@ -87,7 +86,6 @@ dsvnoinfext <- function(infdf, indx, cr1, dr1, ...){ #cr1 = cumul, dr1 = daily
                     mnthsd=mnthsd, mthmedian = mnthmed)
   return(ddf1)
 }
-
 
 infx9  <- infx_df %>% filter(year == 2009) %>% arrange(yday)
 infx10 <- infx_df %>% filter(year == 2010) %>% arrange(yday)
