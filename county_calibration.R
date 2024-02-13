@@ -1,14 +1,13 @@
+library(renv)
+setwd("code/blight_related/countcal")
+#renv::activate()
 library(PoPS)
-library(terra)
-library(doParallel)
-# library(plyr)
 
 # Note that the google drive might have a different letter
 ffIn <- "Z:/Late_blight/"
 ffout <- "Z:/Late_blight/modelresults/"
 
-
-infected_years_file = paste0(ffIn, "infections/starting_inf/starting_inf_2009.shp")
+infected_years_file = paste0(ffIn, "infections/infections/starting_inf_2009.gpkg")#"infections/rasters/2009/usa_2009_infections.tif")
 number_of_observations = 326
 prior_number_of_observations = 0
 prior_means = c(0, 0, 0, 0, 0, 0)
@@ -17,10 +16,10 @@ params_to_estimate = c(TRUE, TRUE, TRUE, TRUE, FALSE, FALSE)
 number_of_generations = 7
 generation_size = 1000
 pest_host_table = paste0(ffIn, "hosts/pest_host_table_lb.csv")
-competency_table = paste0(ffIn, "hosts/competency_table.csv")
-infected_file_list = paste0(ffIn, "infections/infections/county_infections_2009.shp")
-host_file_list = paste0(ffIn, "hosts/csbhost2009.tif")
-total_populations_file = paste0(ffIn, "hosts/csbhost2009.tif")
+competency_table = paste0(ffIn, "hosts/competency_table_original.csv")
+infected_file_list = paste0(ffIn, "infections/infections/county_infections_2009.gpkg")
+host_file_list = paste0(ffIn, "hosts/2009")
+total_populations_file = paste0(ffIn, "all_populations/csballpl_2009.tif")
 temp = TRUE
 temperature_coefficient_file = paste0(ffIn, "Weather_data/weather_us_2009.tif")
 precip = FALSE
@@ -78,7 +77,7 @@ number_of_iterations = 1e+05
 exposed_file_list = ""
 verbose = TRUE
 write_outputs = "None"
-output_folder_path = ""
+output_folder_path = ffout
 network_filename = ""
 network_movement = "walk"
 success_metric = "mcc"
@@ -94,8 +93,10 @@ file_random_seeds = NULL
 use_soils = FALSE
 soil_starting_pest_file = ""
 start_with_soil_populations = FALSE
+county_level_infection_data = TRUE
 
 #started at 20:35 on 4/19
+# Started at 9 on 2/13
 lb_cal = calibrate(infected_years_file,
                                number_of_observations,
                                prior_number_of_observations,
@@ -181,4 +182,6 @@ lb_cal = calibrate(infected_years_file,
                                file_random_seeds,
                                use_soils,
                                soil_starting_pest_file,
-                               start_with_soil_populations)
+                               start_with_soil_populations,
+                               county_level_infection_data)
+
