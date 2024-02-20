@@ -1,13 +1,15 @@
-library(renv)
-setwd("code/blight_related/countcal")
-#renv::activate()
 library(PoPS)
+library(terra)
+library(doParallel)
+# library(plyr)
 
 # Note that the google drive might have a different letter
 ffIn <- "Z:/Late_blight/"
 ffout <- "Z:/Late_blight/modelresults/"
 
-infected_years_file = paste0(ffIn, "infections/infections/starting_inf_2009.gpkg")#"infections/rasters/2009/usa_2009_infections.tif")
+
+# This has all the time steps for a calibration/validation duration
+infected_years_file = paste0(ffIn, "infections/gpkg/years/2009/inf_years_file_2009.gpkg")
 number_of_observations = 326
 prior_number_of_observations = 0
 prior_means = c(0, 0, 0, 0, 0, 0)
@@ -17,10 +19,10 @@ number_of_generations = 7
 generation_size = 1000
 pest_host_table = paste0(ffIn, "hosts/pest_host_table_lb.csv")
 competency_table = paste0(ffIn, "hosts/competency_table_original.csv")
-infected_file_list = paste0(ffIn, "infections/infections/county_infections_2009.gpkg")
-host_file_list = paste0(ffIn, "hosts/2009")
-total_populations_file = paste0(ffIn, "all_populations/csballpl_2009.tif")
-temp = TRUE
+# This is the starting infection for a calibration/validation perio
+infected_file_list = paste0(ffIn, "infections/gpkg/filelist/2009/inf_file_2009.gpkg")
+host_file_list = paste0(ffIn, "hosts/2009/csbhost_2009.tif") 
+total_populations_file = paste0(ffIn, "all_populations/allplcsb_2009test.tif")temp = TRUE
 temperature_coefficient_file = paste0(ffIn, "Weather_data/weather_us_2009.tif")
 precip = FALSE
 precipitation_coefficient_file = ""
