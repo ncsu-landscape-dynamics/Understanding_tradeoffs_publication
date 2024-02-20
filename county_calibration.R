@@ -20,7 +20,7 @@ generation_size = 1000
 pest_host_table = paste0(ffIn, "hosts/pest_host_table_lb.csv")
 competency_table = paste0(ffIn, "hosts/competency_table_original.csv")
 # This is the starting infection for a calibration/validation perio
-infected_file_list = paste0(ffIn, "infections/gpkg/filelist/2009/inf_file_2009.gpkg")
+infected_file_list = paste0(ffIn, "infections/gpkg/filelist/2009/inf_filelist_2009.gpkg")
 host_file_list = paste0(ffIn, "hosts/2009/csbhost_2009.tif") 
 total_populations_file = paste0(ffIn, "all_populations/allplcsb_2009test.tif")temp = TRUE
 temperature_coefficient_file = paste0(ffIn, "Weather_data/weather_us_2009.tif")
