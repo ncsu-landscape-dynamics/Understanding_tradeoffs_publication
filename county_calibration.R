@@ -9,7 +9,7 @@ ffout <- "Z:/Late_blight/modelresults/"
 
 
 # This has all the time steps for a calibration/validation duration
-infected_years_file = paste0(ffIn, "infections/gpkg/years/2009/inf_years_file_2009.gpkg")
+infected_years_file = paste0(ffIn, "infections/gpkg/years/2009/inf_years_file_2009.gpkg")#"infections/rasters/2009/usa_2009_infections.tif")
 number_of_observations = 326
 prior_number_of_observations = 0
 prior_means = c(0, 0, 0, 0, 0, 0)
@@ -21,8 +21,9 @@ pest_host_table = paste0(ffIn, "hosts/pest_host_table_lb.csv")
 competency_table = paste0(ffIn, "hosts/competency_table_original.csv")
 # This is the starting infection for a calibration/validation perio
 infected_file_list = paste0(ffIn, "infections/gpkg/filelist/2009/inf_filelist_2009.gpkg")
-host_file_list = paste0(ffIn, "hosts/2009/csbhost_2009.tif") 
-total_populations_file = paste0(ffIn, "all_populations/allplcsb_2009test.tif")temp = TRUE
+host_file_list = paste0(ffIn, "hosts/host_2009.tif")
+total_populations_file = paste0(ffIn, "all_populations/tot_pop_2009_zeros.tif")
+temp = TRUE
 temperature_coefficient_file = paste0(ffIn, "Weather_data/weather_us_2009.tif")
 precip = FALSE
 precipitation_coefficient_file = ""
