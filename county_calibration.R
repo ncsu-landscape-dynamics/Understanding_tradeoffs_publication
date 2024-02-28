@@ -7,10 +7,9 @@ library(doParallel)
 ffIn <- "Z:/Late_blight/"
 ffout <- "Z:/Late_blight/modelresults/"
 
-
 # This has all the time steps for a calibration/validation duration
 infected_years_file = paste0(ffIn, "infections/gpkg/years/2009/inf_years_file_2009.gpkg")#"infections/rasters/2009/usa_2009_infections.tif")
-number_of_observations = 326
+number_of_observations = 639
 prior_number_of_observations = 0
 prior_means = c(0, 0, 0, 0, 0, 0)
 prior_cov_matrix = matrix(0, 6, 6)
@@ -21,9 +20,7 @@ pest_host_table = paste0(ffIn, "hosts/pest_host_table_lb.csv")
 competency_table = paste0(ffIn, "hosts/competency_table_original.csv")
 # This is the starting infection for a calibration/validation perio
 infected_file_list = paste0(ffIn, "infections/gpkg/filelist/2009/inf_filelist_2009.gpkg")
-# Make the host files without NAs
 host_file_list = paste0(ffIn, "hosts/host_2009_nona.tif")
-# Make total populations files without NAs
 total_populations_file = paste0(ffIn, "all_populations/tot_pop_2009_nona.tif")
 temp = TRUE
 temperature_coefficient_file = paste0(ffIn, "Weather_data/weather_us_2009.tif")
@@ -31,7 +28,7 @@ precip = FALSE
 precipitation_coefficient_file = ""
 model_type = "SI"
 latency_period = 0
-time_step = "month"
+time_step = "week"
 season_month_start = 1
 season_month_end = 12
 start_date = "2009-01-01"
@@ -44,7 +41,7 @@ use_lethal_temperature = FALSE
 temperature_file = ""
 lethal_temperature = 5
 lethal_temperature_month = 1
-mortality_frequency = "year"
+mortality_frequency = "week"
 mortality_frequency_n = 1
 management = FALSE
 treatment_dates = c("")
@@ -59,7 +56,7 @@ anthropogenic_kappa = 0
 pesticide_duration = c(0)
 pesticide_efficacy = 1
 mask = NULL
-output_frequency = "year"
+output_frequency = "week"
 output_frequency_n = 1
 movements_file = ""
 use_movements = FALSE
@@ -100,8 +97,6 @@ soil_starting_pest_file = ""
 start_with_soil_populations = FALSE
 county_level_infection_data = TRUE
 
-#started at 20:35 on 4/19
-# Started at 9 on 2/13
 lb_cal = calibrate(infected_years_file,
                                number_of_observations,
                                prior_number_of_observations,
