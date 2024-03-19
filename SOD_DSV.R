@@ -8,7 +8,7 @@ sodweather <- function(x){
 }
 
 # Take some potential temps to calculate the weather coefficient
-sodv2 <- lapply(seq(-2, 32, by=0.25), sodf)
+sodv2 <- lapply(seq(-2, 32, by=0.25), sodweather)
 
 sodvf2 <- data.frame(t = seq(-2,32,by=0.25), dv = unlist(sodv2))
 
