@@ -30,10 +30,9 @@ sodvf2 <- sodvf2[sodvf2$dv > 0.0,]
 sodvf2[1:15, "dv"] <- sodvf2[1:15, "t"] * 0.0338
 
 # Calculate the thresholds
-thresh1 <- 0.2*max(sodvf2$dv) # 0.1853247
-thresh2 <- 0.4*max(sodvf2$dv) # 0.3706494
-thresh3 <- 0.6*max(sodvf2$dv) # 0.5559741
-thresh4 <- 0.8*max(sodvf2$dv) # 0.7412988
+thresh1 <- 0.25*max(sodvf2$dv) # 0.23165
+thresh2 <- 0.5*max(sodvf2$dv)  # 0.4633117
+thresh3 <- 0.75*max(sodvf2$dv) # 0.6949676
 
 # DSV logic
 dsv <- function(precip, tmean) {
@@ -128,3 +127,20 @@ for(i in 1:12){
   }
   writeRaster(cd2, paste0("Q:/My Drive/DSV/",yseq[i],"/cuthresh",yseq[i],"_",j,".tif"))
 }
+
+# Create the scatterplot
+ggplot(data = sodvf2, aes(x = t, y = dv)) +
+  geom_point() +
+  geom_hline(yintercept = thresh1, linetype = "dashed", color = "red") +
+  geom_hline(yintercept = thresh2, linetype = "dashed", color = "blue") +
+  geom_hline(yintercept = thresh3, linetype = "dashed", color = "green") +
+  #geom_hline(yintercept = thresh4, linetype = "dashed", color = "orange") +
+  labs(x = "Temperature (C)", y = "Degree Severity Values",
+       title = "Sudden Oak Death Degree Severity Values\nover Temperature with Thresholds") +
+  annotate("text", x = 1, y = thresh1, label = "Threshold 1") +
+  annotate("text", x = 1, y = thresh2, label = "Threshold 2") +
+  annotate("text", x = 1, y = thresh3, label = "Threshold 3") +
+  #annotate("text", x = 1, y = thresh4, label = "Threshold 4") +
+  scale_x_continuous(breaks = seq(min(sodvf2$t), max(sodvf2$t), by = 2))  # adjust 'by' as needed
+
+             
