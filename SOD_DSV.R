@@ -40,9 +40,9 @@ dsv <- function(precip, tmean) {
   prec_val = ifel(precip >= 2, 1, 0)
   
   t_val = ifel(tmean > 13.75 & tmean < 24.75, 4, 
-        ifel(tmean > 10.25 & tmean <= 13.75 | tmean >=24.75 & tmean < 26.5, 3,
-             ifel(tmean <= 10.25 & tmean > 6.75 | tmean >= 26.5 & tmean < 28.0, 2,
-                 ifel(tmean <= 6.75 | tmean >= 28.0 , 1, 0))))
+               ifel(tmean > 10.25 & tmean <= 13.75 | tmean >=24.75 & tmean < 26.5, 3,
+                    ifel(tmean <= 10.25 & tmean > 6.75 | tmean >= 26.5 & tmean < 28.0, 2,
+                         ifel(tmean <= 6.75 & tmean > 0 | tmean >= 28.0 & tmean < 32, 1, 0))))
   
   dsv_val = prec_val * t_val
   
