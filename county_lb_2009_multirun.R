@@ -51,8 +51,8 @@ ffout <- "Z:/Late_blight/modelresults/2009"
 
 
 infected_file_list = paste0(ffIn, "infections/gpkg/filelist/2009/inf_filelist_2009.gpkg")
-host_file_list = paste0(ffIn, "hosts/host_2009_nona.tif")
-total_populations_file = paste0(ffIn, "all_populations/tot_pop_2009_nona.tif")
+host_file_list = paste0(ffIn, "hosts/host_2009_nonanomask_int.tif")
+total_populations_file = paste0(ffIn, "all_populations/tot_pop_2009_nonanomask_int.tif")
 # The multirun uses "parameter_means" and "parameter_cov_matrix" instead?
 prior_means = c(0, 0, 0, 0, 0, 0)
 prior_cov_matrix = matrix(0, 6, 6)
