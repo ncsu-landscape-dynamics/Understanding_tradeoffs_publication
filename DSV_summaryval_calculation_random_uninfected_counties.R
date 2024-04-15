@@ -22,8 +22,14 @@ dsvnoinfext <- function(infdf, indx, cr1, dr1, ...){ #cr1 = cumul, dr1 = daily
   print(sel_df)
   sel_cty = sel_df$st_ct
   sel_hzone = as.character(sel_df$zone)
-  print(paste0("sel ",sel_hzone))
-  potential_co = cobuf[cobuf$zone == sel_hzone,]
+  # Keep the starting county out of the sample of potential counties
+  potential_co = co1[co1$hardinessz == sel_hzone & co1$stco != sel_cty,]
+  # If potential_co is not empty, sample from it
+  if (nrow(potential_co) > 0) {
+    complem_zone = potential_co[sample(nrow(potential_co),1),]
+  } else {
+    print("No other counties in the same hardiness zone.")
+  }  
   complem_zone = potential_co[sample(nrow(potential_co),1),]
   print(paste0("complement ",as.character(as.data.frame(complem_zone)[,2])))
   # Get the days/durations relevant to each period
