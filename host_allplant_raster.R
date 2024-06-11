@@ -1,81 +1,126 @@
 library(terra)
-library(tidyverse)
 library(tigris)
-library(lubridate)
 library(sf)
 
-l1 <- list.files("Q:/My Drive/popblightdata/newareas/ctyhostcbs/combo/2010/", pattern = "tif$",
-                 full.names = T)
-r0 <- rast("Q:/My Drive/popblightdata/newareas/infections/2009/usa_2009_infections.tif")
+cdll1 <- list.files("Z:/Late_blight/temp/cdls", recursive=T, full.names=T)
+
+cdll1 <- cdll1[grepl("tif$|img$", cdll1)]
+
+
+r0 <- rast("Z:/Late_blight/Weather_data/weather_us_2009.tif")
 r0 <- r0[[1]]
-values(r0 > 0) <- 0
 
-for(n in 2011:2020){
-ln1 <- list.files(paste0("Q:/My Drive/popblightdata/newareas/ctyhostcbs/combo/",n,"/")
-                  , pattern="tif$", full.names=T)
-tem1 <- mosaic(rast(l1[1]), rast(l1[2]), fun="min")
-for(i in 3:length(l1)){
-  temr1 = rast(l1[i])
-  tem1 = mosaic(tem1, temr1, fun = "min")
-}
+r0[!is.na(r0)] = 100
+r0[r0 == 100] = 0
+rmask <- r0
+rmask[is.na(rmask)] <- 1
+rmask[rmask != 1] <- NA
 
-tem2 <- extend(tem1, r0)
-txy1 <- xyFromCell(tem2, which(tem2[]==100))
-r1 <- r0
-r1[cellFromXY(r1, txy1)] <- 100
-r2 = c(r1,r1)
-for(i in 3:52){
-  r2 = c(r2, r1)
-}
-writeRaster(r2, paste0("Q:/My Drive/temp/host_",n,".tif"))
-}
+crmask <- rast("Z:/Late_blight/helpful_shapes_rasters/cropmaskforCDL_albers.tif")
 
-
-l2 <- list.files("Q:/My Drive/relatedtoCDL/cdl1000/", pattern="tif$", full.names = T)
-l2 <- l2[c(1:13, 15:27)]
-# Set the <1 to NA
-
-cdlcrrcmt3 <- matrix(c(0,0,NA,1,7,100,8,10,NA,11,15,100,16,21,NA,22,40,100,
-                       41,41,NA,42,43,100, 44,44,100,45,54,100,55,55,100,56,62,100,
-                       63,63,NA,64,73,100,74,74,NA,75,78,100,79,81,NA,82,84,0,
-                       85,87,NA,88,89,0,93,93,0,94,111,NA,112,113,0,114,121,NA,
-                       122,125,0,126,131,NA,132,132,0,131,141,NA,142,144,100,
-                       145,152,NA,153,153,100,154,176,NA,177,177,100,178,190,NA,
-                       191,191,100,192,195,NA,196,196,100,197,204,NA,205,
-                       228,100,229,229,NA,230,251,100,252,255,NA,256,256,100), ncol = 3,
+cdlcrrcmt3 <- matrix(c(0,0,NA,1,6,100,7,9,0,10,14,100,15,20,0,21,39,100,
+                       40,40,0,41,61,100,62,62,0,63,72,0,73,73,0,74,204,0,
+                       205,227,100,228,228,0,229,250,100,251,254,0,255,255,100), ncol = 3,
                      byrow = T)
 
-cdlrcpt <- matrix(c(0,42,0,43,43,100,44,53,0,54,54,100,55,256,0), ncol = 3,
-                  byrow = T)
+# Change the filter to remove big crops
+cdlcrrcmt3 <- matrix(c(0,0,NA,1,24,0,25,39,100,40,40,0,41,61,100,62,204,0,205,
+                       227,100,228,228,0,229,250,100,251,
+                       254,0,255,255,100), ncol = 3, byrow = T)
 
-indseq <- seq(3,20, by=2)
 
-for(i in 1:length(indseq)){
-  sr1 <- rast(l2[1])[[indseq[i]]]
-  sr1[sr1 < 1] <- NA
-  sr2 <- rast(l2[2])[[indseq[i]]]
-  sr2[sr2 < 1] <- NA
-  
-  tem3 <- mosaic(sr1, sr2)
-  
-  for(j in 3:length(l2)){
-    temr2 = rast(l2[j])[[indseq[i]]]
-    temr2[temr2 < 1] <- NA
-    tem3 = mosaic(tem3, temr2)
-  }
-  
-  col1 <- c(tem3, tem3)
-  
-  for(k in 3:52){
-    col1 = c(col1, tem3)
-  }
-  
-  yseq <- 2011:2020
-  
-  pott <- classify(col1, cdlrcpt, right=NA)
-  writeRaster(pott, paste0("Q:/My Drive/temp/potto_",yseq[i],".tif"), overwrite=T)
-  
-  allp <- classify(col1, cdlcrrcmt3, right=NA)
-  writeRaster(pott, paste0("Q:/My Drive/temp/allplant_",yseq[i],".tif"), overwrite=T)
+
+
+#us2 <- st_read("data/gis_data/all_states/lower48_bound/state_nrcs_aea.shp")
+#us2 <- us2[!us2$STPO %in% c("AZ", "HI", "VI", "MP", "GU", "AS", "PR", 
+#                           "IA", "KS","MN","ND","ID","NE","OR","SD",
+#                           "AK","LA","MT","CA","CO","NB","UT","WA","AR",
+#                           "MO","NM","OK","WY","NV","MS","TX"),]
+#us2 <- st_union(us2)
+#us2 <- st_transform(us2, crs="epsg:3857")
+#us2 <- vect(us2)
+#us3 <- project(us2, y=crs(rast(cdll1[2])))
+us3 <- vect("Z:/Late_blight/helpful_shapes_rasters/crmask_for_host_processing.gpkg")
+us3 <- project(us3, y=crs(rast(cdll1[1])))
+
+yseq <- 2009:2020
+
+# This is more succinct
+newrv <- function(x){
+  r1 = rast(cdll1[x])
+  print(x)
+  # crop to area
+  cr1 = crop(r1, us3)
+  # Mask has to be done separately
+  ma1 = mask(cr1, us3)
+  print("crop")
+  cl1 = classify(ma1, cdlcrrcmt3, right=NA, overwrite=T)
+  cl1[cl1 == 100] = 0.1
+  ag1 = terra::aggregate(cl1, 33, fun="sum")
+  ag2 = clamp(ag1, lower=0, upper=100)
+  pr1 = project(ag2, crs(r0), overwrite=T)
+  re1 = resample(pr1, r0, method="near", overwrite=T)
+  print("resample")
+  # Hosts
+  re1[is.na(re1)] = 0
+  re1 = round(re1, 0)
+  # Total pops
+  tp1 = re1
+  tp1[tp1 > 0] = 100
+  writeRaster(re1, paste0("Z:/Late_blight/hosts/no_na_no_mask_revsd/host_no_na_rv_",yseq[x],".tif"))
+  writeRaster(tp1, paste0("Z:/Late_blight/all_populations/no_na_no_mask_revsd/tot_pop_no_na_rv_",yseq[x],".tif"))
 }
 
+for(i in 2:length(cdll1)){
+  newrv(i)
+}
+
+# This function is relevant
+crreag <- function(x){
+  r1 = rast(cdll1[x])
+  print("start crop")
+  print(Sys.time())
+  # Do mask separately
+  cr1 = crop(x=r1, y=us3)
+  ma1 = mask(cr1, y=us3)
+  print("start classify")
+  print(Sys.time())
+  rec1 = classify(ma1, cdlcrrcmt3, right=NA)
+  # Continue for total populations
+  print("start aggregate")
+  print(Sys.time())
+  agg1 = aggregate(rec1, 33, fun="max")
+  
+  print("start project")
+  print(Sys.time())
+  pr1 = project(agg1, crs(r0))
+  print("start resample")
+  print(Sys.time())
+  res1 = resample(pr1, r0, method="near")
+  res1[res1 > 0] = 100
+  #mk1 = mask(res1, hz1, maskvalue=0, updatevalue=0)
+  #mk1[is.na(mk1)] = 0
+  res1[is.na(res1)] = 0
+  writeRaster(res1, paste0("Z:/Late_blight/all_populations/tot_pop_",
+                           yseq[x],"_nona_nomask.tif"), overwrite=T)
+  #return(res1)
+  ## For hosts
+  host1 = rec1
+  host1[host1 == 100] = 0.1
+  print("start host aggregate")
+  print(Sys.time())
+  agg2 = aggregate(host1, 33, fun="sum")
+  agg2 = clamp(agg2, lower=0, upper=100)
+  print("start host project")
+  print(Sys.time())
+  pr2 = project(agg2, crs(r0))
+  print("start host resample")
+  print(Sys.time())
+  res2 = resample(pr2, r0, method="near")
+  #mk2 = mask(res2, hz1, maskvalue=0, updatevalue=0)
+  #mk2[is.na(mk2)] = 0
+  res2[is.na(res2)] = 0
+  writeRaster(res2, paste0("Z:/Late_blight/hosts/host_",
+                           yseq[x],"_nona_nomask.tif"), overwrite=T)
+  
+}
