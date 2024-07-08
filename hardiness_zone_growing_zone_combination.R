@@ -64,6 +64,7 @@ grwson$NOTE <- factor(grwson$NOTE, levels = c("Jan: Dec",
                                               "Jun: mid Sept"
 ))
 
+# Several of these dates are modified. 
 grwson$season_st <- case_when(str_detect(grwson$NOTE, "Jan") == T ~ yday(as.Date("2009/01/01")),
                               str_detect(grwson$NOTE, "early Feb") == T ~ yday(as.Date("2009/02/03")),
                               str_detect(grwson$NOTE, "mid Mar") == T ~ yday(as.Date("2009/03/15")),                              
@@ -87,6 +88,8 @@ grwson$season_end <- case_when(str_detect(grwson$NOTE, "Dec") == T ~ yday(as.Dat
                               str_detect(grwson$NOTE, "mid Sept") == T ~ yday(as.Date("2009/09/14")),
                               str_detect(grwson$NOTE, "late Sept") == T ~ yday(as.Date("2009/09/24"))
 )
+
+# The file Z:/Late_blight/relatedtables/seasondatesdirs.csv has the dates used to delineate the season start and end.
 
 # List of DSV
 dl1 <- list.files("Z:/Late_blight/lbdsveconu/", recursive = T, pattern = "mask.*new.*tif$",
