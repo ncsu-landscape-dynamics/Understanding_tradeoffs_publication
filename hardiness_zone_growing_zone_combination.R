@@ -5,20 +5,9 @@ library(terra)
 library(tidyverse)
 library(lubridate)
 
-
+l1 <- list.files("Z:/Late_blight/lbdsveconu/hzone", full.names = T")
 hz <- gtools::mixedsort(unique(str_split_i(str_split_i(l1, "/", 5), "_", 2)))
 
-grwson <- vect("Z:/Late_blight/helpful_shapes_rasters/easternstudyarea.gpkg")
-  
-l1 <- list.files("D:/data/ncsu/sentinelMS/S2A_MSIL2A_20220814T160911_N0400_R140_T17SLV_20220814T232202.SAFE/", 
-                 full.names = T, recursive = T)
-
-mrcf <- vect("data/gis_data/blight/mrcfieldtest/largemrcfield.geojson")
-
-# S2 bands I want to keep for now:
-c(10:13,)
-
-https://www.tomatofest.com/Tomato_Growing_Zone_Maps_s/164.htm
 # Use 4, (4b&5a), (5b&6a), 
 4 - darkblue    - late May:mid-Sept
 5 - blue        - late May:mid-Sept
