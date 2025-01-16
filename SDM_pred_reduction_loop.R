@@ -32,12 +32,11 @@ flexsdm::sdm_directory(
 )
 
 subset_files <- list.files("Z:/Late_blight/SDM/lateblight/flexsdm_results/1_Inputs/2_Predictors/1_Current/cropped/transformed/", full.names=T)
-subset_files <- subset_files[-c(1)]
+subset_files <- subset_files[-c(1,26)]
 
 cropped_predictors <- lapply(subset_files, rast)
 
 env_layer <- rast(cropped_predictors)
-env_layer <- env_layer[[-25]]
 
 # Create a data frame that has the layer name, the group, and column for inserting the TSS from first, solo model
 env_group_layer <- data.frame(layer = names(env_layer)[c(1,12:19,2:11,20,37,
