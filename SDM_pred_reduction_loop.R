@@ -67,7 +67,7 @@ sdmf <- function(ee) {
   lb_temp <- lb_all[,c(cols2use)]
   
   glm_run <- fit_glm(data = lb_temp, response = "pr_ab", predictors = names(env_layer[[ee]]),
-                     partition = ".part", thr = c("max_sens_spec", "equal_sens_spec"),
+                     partition = ".part", thr = c("max_sens_spec"),
                      select_pred = F, poly =0, inter_order = 0)
   
   
