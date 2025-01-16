@@ -61,7 +61,8 @@ pred_selc <- list()
 
 sdmf <- function(ee) {
   Ind = ee
-  
+
+  # This step creates the partitions for validation. It takes >30 minutes
   prt_lb <- part_sblock(env_layer = env_layer[[ee]], data = lb4, x = "x", 
         y = "y", pr_ab = "pr_ab", n_part = 6, min_res_mult = 4, max_res_mult = 25)
   
