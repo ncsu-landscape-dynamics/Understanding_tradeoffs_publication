@@ -70,7 +70,7 @@ sdmf <- function(ee) {
   
   lb4 <- prt_lb$part
   
-  # Background
+  # Create background points
   bgpt1 <- lapply(1:6, \(x) {
     sample_background(
       data = lb4, x= "x", y ="y", n = (sum(lb4$.part == x)*2) , method = c("thickening",
@@ -85,7 +85,8 @@ sdmf <- function(ee) {
   
   regions1 <- env_layer[[1]]
   regions1[!is.na(regions1)] <- 1
-  
+
+  # Create pseudoabsences
   lb5pa <- lapply(1:6, \(x) {
     sample_pseudoabs(
       data = lb4, x= "x", y ="y", n = sum(lb4$.part == x)*2, method = c("geo_const",
@@ -102,8 +103,7 @@ sdmf <- function(ee) {
   
   lb_allsm2 <-lb_allsm %>% sdm_extract(data = ., x = "x", y = "y", env_layer = env_cutsm, 
                                        filter_na = T)
-  #write.csv(lb_all, "Z:/Late_blight/SDM/lateblight/presenceabsenceallpredictors.csv", row.names = F)
-  
+
   bgpt1s <- bgpt1s[,1:4]
   bgpt1s <- bgpt1s %>% sdm_extract(data = ., x = "x", y = "y", env_layer = env_cutsm,
                                    filter_na = T)
