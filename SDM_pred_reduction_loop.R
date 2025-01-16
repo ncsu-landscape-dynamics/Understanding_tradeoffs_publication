@@ -34,7 +34,7 @@ flexsdm::sdm_directory(
 subset_files <- list.files("Z:/Late_blight/SDM/lateblight/flexsdm_results/1_Inputs/2_Predictors/1_Current/cropped/transformed/", full.names=T)
 subset_files <- subset_files[-c(1)]
 
-cropped_predictors <- lapply(cropped_predictors, rast)
+cropped_predictors <- lapply(subset_files, rast)
 
 env_layer <- rast(cropped_predictors)
 env_layer <- env_layer[[-25]]
