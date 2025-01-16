@@ -46,7 +46,13 @@ env_group_layer$group <- c(rep("Temp", 11), rep("Prec", 8), rep("GDD",2),
                            rep("VI", 3), rep("Human",2), rep("Soil",7), "RH", 
                            rep("Topographic",3))
 
-env_group_layer$TSS
+# Match order of rows in data frame to the order of layers in raster
+nm1 <- names(env_layer)
+env_group_layer <- env_group_layer[match(nm1, env_group_layer$layer),]
+rownames(env_group_layer) <- 1:nrow(env_group_layer)
+
+env_group_layer$TSS <- NA
+env_group_layer$indx <- 1:nrow(env_group_layer)
 
 pred_selc <- list()
 
