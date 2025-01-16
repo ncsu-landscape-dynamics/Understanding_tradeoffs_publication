@@ -46,16 +46,16 @@ dir.create(paste0(pred_cropped_path, "/transformed"), showWarnings = FALSE,
 
 cropped_predictors <- lapply(cropped_predictors, rast)
 
-#' 6. Create a spatial-block partition for the data based on continuous predictors READ flxdm
+env_layer <- rast(cropped_predictors)
+env_layer <- env_layer[[-25]]
 
-# Isolate numerical predictors for spatial block partitioning
-env_layer <- list()
+env_group_layer <- data.frame(layer = names(env_layer)[c(1,12:19,2:11,20,37,
+                                                         21:22,24,23,36,25:35)])
+env_group_layer$group <- c(rep("Temp", 11), rep("Prec", 8), rep("GDD",2), 
+                           rep("VI", 3), rep("Human",2), rep("Soil",7), "RH", 
+                           rep("Topographic",3))
 
-for (i in seq_along(cropped_predictors)) {
-  env_layer[[i]] <- get_numerical_rasters(cropped_predictors[[i]])
-}
-
-env_layer <- rast(env_layer)#[c(1:35,37:38)])
+env_group_layer$TSS
 
 pred_selc <- list()
 
