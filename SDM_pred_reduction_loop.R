@@ -58,10 +58,10 @@ pred_selc <- list()
 
 sdmf <- function(ee) {
   Ind = ee
-
+  
   # This step creates the partitions for validation. It takes >30 minutes
   prt_lb <- part_sblock(env_layer = env_layer[[ee]], data = lb4, x = "x", 
-        y = "y", pr_ab = "pr_ab", n_part = 6, min_res_mult = 4, max_res_mult = 25)
+                        y = "y", pr_ab = "pr_ab", n_part = 6, min_res_mult = 4, max_res_mult = 25)
   
   bll2 <- get_block(env_layer, prt_lb$grid)
   
@@ -71,38 +71,38 @@ sdmf <- function(ee) {
   bgpt1 <- lapply(1:6, \(x) {
     sample_background(
       data = lb4, x= "x", y ="y", n = (sum(lb4$.part == x)*2) , method = c("thickening",
-     width = 6000), rlayer = bll2
+                                                                           width = 6000), rlayer = bll2
     )
   }) %>% bind_rows()
   
   bgpt1$.part <- as.vector(unlist(lapply(1:6, \(x) rep(x, 
-       times = (nrow(lb4[lb4$.part == x,]) *2)))))
+                                                       times = (nrow(lb4[lb4$.part == x,]) *2)))))
   
   bgpt1$sp <- "Phytophthora_infestans"
   
   regions1 <- env_layer[[1]]
   regions1[!is.na(regions1)] <- 1
-
+  
   # Create pseudoabsences
   lb5pa <- lapply(1:6, \(x) {
     sample_pseudoabs(
       data = lb4, x= "x", y ="y", n = sum(lb4$.part == x)*2, method = c("geo_const",
-                width = "3000"), rlayer = regions1, sp_name = "Phytophthora_infestans"#, 
+                                                                        width = "3000"), rlayer = regions1, sp_name = "Phytophthora_infestans"#, 
     )
   }) %>% bind_rows()
   
   lb5pa$.part <- unlist(lapply(1:6, function(x) rep(x, sum(lb4$.part == x)*2)))
   lb5pa <- lb5pa[,c(2:5,1)]
   
-  lb4sm$sp <- "Phytophthora_infestans"
+  lb4$sp <- "Phytophthora_infestans"
   # Combine the presence and pseudo-absence
-  lb_allsm <- rbind(lb4sm, lb5pas)
+  lb_all <- rbind(lb4, lb5pa)
   
-  lb_allsm2 <-lb_allsm %>% sdm_extract(data = ., x = "x", y = "y", env_layer = env_cutsm, 
+  lb_all2 <-lb_all %>% sdm_extract(data = ., x = "x", y = "y", env_layer = env_layer, 
                                        filter_na = T)
-
+  
   bgpt1s <- bgpt1s[,1:4]
-  bgpt1s <- bgpt1s %>% sdm_extract(data = ., x = "x", y = "y", env_layer = env_cutsm,
+  bgpt1s <- bgpt1s %>% sdm_extract(data = ., x = "x", y = "y", env_layer = env_layer,
                                    filter_na = T)
   
   lbnoa <- complete.cases(lb_all)
@@ -111,12 +111,12 @@ sdmf <- function(ee) {
   bgpt1 <- bgpt1[bgnoa,]
   
   glm_run <- fit_glm(data = lb_all, response = "pr_ab", predictors = names(env_layer),
-                    partition = ".part", thr = c("max_sens_spec", "equal_sens_spec"),
-                    select_pred = F, poly =0, inter_order = 0)
+                     partition = ".part", thr = c("max_sens_spec", "equal_sens_spec"),
+                     select_pred = F, poly =0, inter_order = 0)
   
   
   return(list(paste0("Ind: ", Ind, "; Layer(s): ", names(env_layer[[ee]]), 
-    "; TSS mean: ", glm_run$performance$TSS_mean)))
+                     "; TSS mean: ", glm_run$performance$TSS_mean)))
 }
 
 for (i in 1:2) {
