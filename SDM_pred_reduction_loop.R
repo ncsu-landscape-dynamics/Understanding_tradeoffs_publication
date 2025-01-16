@@ -57,6 +57,7 @@ env_group_layer$indx <- 1:nrow(env_group_layer)
 pred_selc <- list()
 
 lb_all <- read.csv("Z:/Late_blight/SDM/lateblight/presenceabsenceallpredictors.csv")
+lb_all <- lb_all[, names(lb_all) != "NLCD.Land.Cover.Class"]
 
 # Dropped several lines. Reusing a data frame that may or may not be appropriate for this package's process.
 sdmf <- function(ee) {
