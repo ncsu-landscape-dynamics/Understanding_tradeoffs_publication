@@ -1,3 +1,5 @@
+# This is part of the failed PoPS process for modeling late blight spread.
+
 library(PoPS)
 library(terra)
 library(doParallel)
