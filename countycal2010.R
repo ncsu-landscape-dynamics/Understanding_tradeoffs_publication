@@ -1,3 +1,6 @@
+# This is part of the failed PoPS process for modeling late blight spread.
+# There were other versions of this script for years from 2011-2020.
+
 library(PoPS)
 library(terra)
 # library(plyr)
