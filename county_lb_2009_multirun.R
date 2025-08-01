@@ -1,4 +1,4 @@
-# This is part of the failed PoPS process.
+# This is part of the failed PoPS process for modeling late blight spread.
 
 
 #' PoPS (Pest or Pathogen Spread) model Multiple Runs
