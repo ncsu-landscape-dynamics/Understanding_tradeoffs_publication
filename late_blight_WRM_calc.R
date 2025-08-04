@@ -1,4 +1,4 @@
-# This script is called for support in the WC_WRM_cal.R script.
+# This script is called for support in the late_blight_wc_and_WRM.R script.
 
 dsv <- function(calc_rast) {
   tmean <- calc_rast["tmean"]
