@@ -1,3 +1,8 @@
+# This is a supporting function for the weather coefficient processing.
+# It uses all the weather and time related inputs with a couple of constants
+# to calculate hourly temperature values. The time related inputs are based on
+# latitude. For more information see Goudriaan and van Laar 1994.
+
 tempI <- function(rast_stack) {
   dayl <- rast_stack["dayl"]
   tmin <- rast_stack["tmin"]
