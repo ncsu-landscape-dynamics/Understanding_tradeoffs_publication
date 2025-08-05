@@ -5,7 +5,7 @@
 library(terra)
 library(doParallel)
 source("late_blight_WRM_calc.R")
-source("temp_hour.R")
+source("late_blight_temp_hour.R")
 
 rast_size <- nlyr(dayl)
 
