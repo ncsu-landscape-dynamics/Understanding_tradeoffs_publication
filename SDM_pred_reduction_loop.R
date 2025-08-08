@@ -6,37 +6,12 @@ library(spatialEco)
 
 set.seed(42)
 
-path <- "Z:/pops_pesthostuse/pops.sdm/Data/"
-setwd("Z:/Late_blight/SDM/lateblight/")
-domain <- "USA"
-extent <- "Z:/Late_blight/helpful_shapes_rasters/lb_extent.gpkg"
+sdmpath <- </path/to/sdm/predictors>
 
-res <- 1000
+sdm_files <- list.files(sdmpath, full.names=T)
+sdm_files <- sdm_files[-1] #remove a folder from the list of files
 
-lb2 <- vect("Z:/Late_blight/helpful_shapes_rasters/blightptsmovedforSDM.gpkg")
-lbdf <- as.data.frame(lb2[,c(1,16:17)])
-lbdf$id <- paste0(lbdf$x,"_",lbdf$y)
-lbdf <- lbdf[!duplicated(lbdf$id),]
-lb2sel <- lb2[lb2$Rec_ID %in% lbdf$Rec_ID,]
-
-# This splits the USA blight points up for testing and validating. Gonna skip
-# for now.
-lbtn <- sample(lb2sel, nrow(lb2sel)*.8)
-lbvl <- lb2sel[!lb2sel$Rec_ID %in% lbtn$Rec_ID,]
-
-lb3 <- as.data.frame(lbtn[,c(1,16,17)])
-
-#' 2. Set up SDM directories
-flexsdm::sdm_directory(
-  algorithm = TRUE
-)
-
-subset_files <- list.files("Z:/Late_blight/SDM/lateblight/flexsdm_results/1_Inputs/2_Predictors/1_Current/cropped/transformed/", full.names=T)
-subset_files <- subset_files[-c(1,26)]
-
-cropped_predictors <- lapply(subset_files, rast)
-
-env_layer <- rast(cropped_predictors)
+env_layer <- rast(sdm_files)
 
 # Create a data frame that has the layer name, the group, and column for inserting the TSS from first, solo model
 env_group_layer <- data.frame(layer = names(env_layer)[c(1,12:19,2:11,20,37,
