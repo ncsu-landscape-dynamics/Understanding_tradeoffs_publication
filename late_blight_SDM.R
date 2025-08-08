@@ -22,7 +22,7 @@
 theta_s 	saturated soil water content 	m3/m3
 theta_r 	residual soil water content 	m3/m3
 
-#' 1. Load the required packages & set path
+# Load the required packages & set path
 library(flexsdm)
 library(terra)
 library(data.table)
@@ -68,17 +68,13 @@ lb3 <- as.data.frame(lbtn[,c(1,16,17)])
 lbbuf5k <- buffer(lb2, 5000) 
 lbbuf5k <- calib_area(data = lbtn, x = "x", y = "y", method = c("buffer", width =5000), crs = "epsg:4326")
 
-#' 2. Set up SDM directories
+# Set up SDM directories
 flexsdm::sdm_directory(
   algorithm = TRUE
 )
 
-#' 3. Create base raster for the study extent
+# Create base raster for the study extent. This script supplies several support functions.
 source("C:/Users/japolo/Documents/code/blight_related/pops.sdm-main/sdm_helpers.R")
-source("C:/Users/japolo/Documents/code/blight_related/pops.sdm-main/get_envi_chunked.R") # get_topo_global # nolint
-source("C:/Users/japolo/Documents/code/blight_related/pops.sdm-main/raster_base.R") # base_raster at correct resolution and extent # nolint
-source("C:/Users/japolo/Documents/code/blight_related/pops.sdm-main/part_sblock.R") # nolint
-source("C:/Users/japolo/Documents/code/blight_related/pops.sdm-main/sample_background.R") # nolint
 
 res <- fix_resolution(res, domain)
 base <- crop_base_raster(domain, res, path, extent2)
