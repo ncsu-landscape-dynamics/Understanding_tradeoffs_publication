@@ -29,10 +29,6 @@ flexsdm::sdm_directory(
 
 # Create base raster for the study extent
 source("sdm_helpers.R")
-source("get_envi_chunked.R")
-source("raster_base.R")
-source("part_sblock.R")
-source("sample_background.R")
 
 res <- fix_resolution(res, domain)
 base <- crop_base_raster(domain, res, path, extent)
