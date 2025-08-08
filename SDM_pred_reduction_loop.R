@@ -30,7 +30,10 @@ env_group_layer$indx <- 1:nrow(env_group_layer)
 
 pred_selc <- list()
 
+# lb_all is created in the runSDM_<model> script.
+# It terra::extracts all the predictors to using the presence and absence points created in the script.
 lb_all <- read.csv("Z:/Late_blight/SDM/lateblight/presenceabsenceallpredictors.csv")
+# Sometimes the NLCD layer causes issues. I just drop it when it does.
 lb_all <- lb_all[, names(lb_all) != "NLCD.Land.Cover.Class"]
 
 # Dropped several lines. Reusing a data frame that may or may not be appropriate for this package's process.
@@ -50,6 +53,6 @@ sdmf <- function(ee) {
                      "; TSS mean: ", glm_run$performance$TSS_mean)))
 }
 
-for (i in 1:2) {
+for (i in 1:nlyr(env_layer)) {
   pred_selc[i] = sdmf(i)
 }  
