@@ -14,27 +14,27 @@ To forecast SOD with PoPS, we used infection data collected by the Oregon Depart
 SOD was modeled with a DSV that used the same range of scores as that of late blight, however with the thresholds at different precipitation and temperature values than those of late blight. Mean temperature, calculated from Daymet temperature data, and Daymet precipitation were used in the if-then logic for the WRM for SOD.
 
 ### Guide
-This is a sort of map to indicate how the scripts above are used to create the results for the three models. If a script above doesn't appear in the guide, then it was probably used to create a figure or do some ancillary calculations.
-
-WRM
-	late blight:
+This is a sort of map to indicate how the scripts above are used to create the results for the three models. If a script above doesn't appear in the guide, then it was probably used to create a figure or do some ancillary calculations, like `SOD_WRM_temp_curve_threshold_estimation.R`.
+```
+*WRM*
+	_late blight_:
 		late_blight_weather_time_prep.R: calculates the required inputs for 2
 		
 		late_blight_temp_hour.R; late_blight_WRM_calc.R >>> late_blight_wc_and_WRM.R 
 			
-	SOD:
+	_SOD_:
 		SOD_wrm_creation.R
 		
 
-SDM
-	late blight:
+*SDM*
+	_late blight_:
 		run_sdmLB.R
 		
 		SDM_pred_reduction_loop.R
 		
 		rerun run_sdmLB with the reduced set of predictors
 		
-	SOD:
+	_SOD_:
 		run_sdmSOD.R
 		
 		SDM_pred_reduction_loop.R
@@ -42,13 +42,14 @@ SDM
 		rerun run_sdmSOD with the reduced set of predictors
 		
 		
-PoPS
-	late blight:
+*PoPS*
+	_late blight_:
 		late_blight_infection_creation.R
 		late_blight_host_nonhost_creation.R
 		[weather coeffient from late_blight_wc_and_WRM.R]
 		config
 		calibration
 		
-	SOD:
+	_SOD_:
 		
+```
