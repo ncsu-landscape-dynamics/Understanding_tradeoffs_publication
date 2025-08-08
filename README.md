@@ -27,7 +27,7 @@ This is a sort of map to indicate how the scripts above are used to create the r
 		late_blight_temp_hour.R; late_blight_WRM_calc.R >>> late_blight_wc_and_WRM.R 
 			
 	_SOD_:
-		SOD_wrm_creation.R
+		SOD_wrm_calculation.R
 		
 
 *SDM*
