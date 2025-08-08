@@ -27,7 +27,7 @@ flexsdm::sdm_directory(
   algorithm = TRUE
 )
 
-# Create base raster for the study extent
+# Create base raster for the study extent. This script supplies several support functions.
 source("sdm_helpers.R")
 
 res <- fix_resolution(res, domain)
