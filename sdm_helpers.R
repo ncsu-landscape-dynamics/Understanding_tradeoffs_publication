@@ -1,5 +1,7 @@
 #
 # These come from https://github.com/cyborginhas/pops.sdm
+# They should used as "source("/local/path/sdm_helpers.R")" in an R
+# environment where flexsdm will be exececuted.
 #
 
 #' Description: Checks and helpers for run_sdm.R
