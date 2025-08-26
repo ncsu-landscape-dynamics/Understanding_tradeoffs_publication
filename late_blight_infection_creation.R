@@ -34,6 +34,8 @@ mx2 <- matrix(c(lb22$longitude, lb22$latitude), ncol = 2, byrow = F)
 # Year 3
 lb23 <- lb_locs_sim[lb_locs_sim$year == 2023,]
 mx3 <- matrix(c(lb23$longitude, lb23$latitude), ncol = 2, byrow = F)
+mx3 <- mx3 %>% as.data.frame() %>% group_by(V1, V2) %>% mutate(inf_x = n()) %>% slice_head() %>% ungroup()
+mx3b <- matrix(c(mx3$V1, mx3$V2, mx3$inf_x), ncol = 3, byrow = F)
 
 # Add points to template
 loc21 <- templ2
@@ -41,12 +43,12 @@ loc22 <- templ2
 loc23 <- templ2
 loc21[cellFromXY(loc21, mx1)] <- 1
 loc22[cellFromXY(loc22, mx2)] <- 1
-loc23[cellFromXY(loc23, mx3)] <- 1
+loc23[cellFromXY(loc23, mx3b[,1:2])] <- mx3b[,3]
 
-writeRaster(loc21, "Z:/Late_blight/simulation/LB/infection_2021.tif")
-writeRaster(loc22, "Z:/Late_blight/simulation/LB/infection_2022.tif")
-writeRaster(loc23, "Z:/Late_blight/simulation/LB/infection_2023.tif")
+names(loc21) <- "infections"
+names(loc22) <- "infections"
+names(loc23) <- "infections"
 
-
-
-
+writeRaster(loc21, "Z:/Late_blight/Manuscript_1_Data/simulation/LB/inputs/infection/infection_2021.tif", overwrite = T)
+writeRaster(loc22, "Z:/Late_blight/Manuscript_1_Data/simulation/LB/inputs/infection/infection_2022.tif", overwrite = T)
+writeRaster(loc23, "Z:/Late_blight/Manuscript_1_Data/simulation/LB/inputs/infection/infection_2023.tif", overwrite = T)
