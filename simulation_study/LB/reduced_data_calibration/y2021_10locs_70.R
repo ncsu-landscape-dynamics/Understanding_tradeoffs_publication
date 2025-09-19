@@ -1,0 +1,189 @@
+library(PoPS)
+library(terra)
+library(foreach)
+library(doParallel)
+
+rootdir <- "/rs1/researchers/c/cmjone25/Late_blight/Manuscript_1_Data/simulation/LB"
+
+infected_years_file <- file.path(rootdir, "outputs21/locs10x2/upwdrev/rasts/med_loc10_70.tif")
+number_of_observations <- 283
+prior_number_of_observations <- 0
+prior_means <- file.path(rootdir, "inputs/parameters/lb_means_upwardrev.csv")
+prior_cov_matrix = file.path(rootdir, "inputs/parameters/lb_cov_mat.csv")
+params_to_estimate = c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE)
+number_of_generations = 7
+generation_size = 1000
+pest_host_table = file.path(rootdir, "inputs/host/pest_host_table_LB.csv")
+competency_table <- file.path(rootdir, "inputs/host/competency_table_LB.csv")
+infected_file_list = file.path(rootdir, "outputs21/locs10x2/upwdrev/rasts/med_loc10_70.tif")
+host_file_list = file.path(rootdir, "inputs/host/host_no_na_rv_2021.tif")
+total_populations_file <- file.path(rootdir, "inputs/all_populations/tot_pop_no_na_rv_2021.tif")
+temp = TRUE
+temperature_coefficient_file = file.path(rootdir, "inputs/weather/wx_coef/lb_2021_coef_avg.tif")
+precip = FALSE
+precipitation_coefficient_file = ""
+model_type = "SI"
+latency_period = 0
+time_step = "week"
+season_month_start = 1
+season_month_end = 12
+start_date = "2021-01-01"
+end_date = "2021-12-31"
+use_survival_rates = FALSE
+survival_rate_month = 3
+survival_rate_day = 15
+survival_rates_file = ""
+use_lethal_temperature = FALSE
+temperature_file = ""
+lethal_temperature = 3
+lethal_temperature_month = 1
+mortality_frequency = "year"
+mortality_frequency_n = 1
+management = FALSE
+treatment_dates = c("")
+treatments_file = ""
+treatment_method = "ratio"
+natural_kernel_type = "cauchy"
+anthropogenic_kernel_type = "cauchy"
+natural_dir = "NONE"
+natural_kappa = 0
+anthropogenic_dir = "NONE"
+anthropogenic_kappa = 0
+pesticide_duration = c(0)
+pesticide_efficacy = 1.0
+mask = NULL
+output_frequency = "year"
+output_frequency_n = 1
+movements_file = ""
+use_movements = FALSE
+start_exposed = FALSE
+generate_stochasticity = TRUE
+establishment_stochasticity = TRUE
+movement_stochasticity = TRUE
+dispersal_stochasticity = TRUE
+establishment_probability = 0.5
+dispersal_percentage = 0.99
+quarantine_areas_file = ""
+use_quarantine = FALSE
+use_spreadrates = FALSE
+use_overpopulation_movements = FALSE
+overpopulation_percentage = 0
+leaving_percentage = 0
+leaving_scale_coefficient = 1
+calibration_method = "ABC"
+number_of_iterations = 100000
+exposed_file_list = ""
+verbose = TRUE
+write_outputs = "summary_outputs"
+output_folder_path = file.path(rootdir, "outputs21/locs10up/upwdrev/calib/70")
+network_filenames = c("")
+network_movement = c("walk")
+network_min_distances = c(0)
+network_max_distances = c(0)
+network_weights = c(1)
+success_metric = "mcc"
+use_initial_condition_uncertainty = FALSE
+use_host_uncertainty = FALSE
+weather_type = "deterministic"
+temperature_coefficient_sd_file = ""
+precipitation_coefficient_sd_file = ""
+dispersers_to_soils_percentage = 0
+quarantine_directions = ""
+multiple_random_seeds = FALSE
+file_random_seeds = NULL
+use_soils = FALSE
+soil_starting_pest_file = ""
+start_with_soil_populations = FALSE
+county_level_infection_data = FALSE
+
+calib_out <- calibrate(
+infected_years_file = infected_years_file,
+number_of_observations = number_of_observations,
+prior_number_of_observations = 0,
+prior_means = prior_means,
+prior_cov_matrix = prior_cov_matrix,
+params_to_estimate = params_to_estimate,
+number_of_generations = 1,
+generation_size = 50,
+pest_host_table = pest_host_table,
+competency_table = competency_table,
+infected_file_list = infected_file_list,
+host_file_list = host_file_list,
+total_populations_file = total_populations_file,
+temp = temp,
+temperature_coefficient_file = temperature_coefficient_file,
+precip = precip,
+precipitation_coefficient_file = precipitation_coefficient_file,
+model_type = model_type,
+latency_period = latency_period,
+time_step = time_step,
+season_month_start = season_month_start,
+season_month_end = season_month_end,
+start_date = start_date,
+end_date = end_date,
+use_survival_rates = use_survival_rates,
+survival_rate_month = survival_rate_month,
+survival_rate_day = survival_rate_day,
+survival_rates_file = survival_rates_file,
+use_lethal_temperature = use_lethal_temperature,
+temperature_file = temperature_file,
+lethal_temperature = lethal_temperature,
+lethal_temperature_month = lethal_temperature_month,
+mortality_frequency = mortality_frequency,
+mortality_frequency_n = mortality_frequency_n,
+management = management,
+treatment_dates = treatment_dates,
+treatments_file = treatments_file,
+treatment_method = treatment_method,
+natural_kernel_type = natural_kernel_type,
+anthropogenic_kernel_type = anthropogenic_kernel_type,
+natural_dir = natural_dir,
+natural_kappa = natural_kappa,
+anthropogenic_dir = anthropogenic_dir,
+anthropogenic_kappa = anthropogenic_kappa,
+pesticide_duration = pesticide_duration,
+pesticide_efficacy = pesticide_efficacy,
+mask = mask,
+output_frequency = output_frequency,
+output_frequency_n = output_frequency_n,
+movements_file = movements_file,
+use_movements = use_movements,
+start_exposed = start_exposed,
+generate_stochasticity = generate_stochasticity,
+establishment_stochasticity = establishment_stochasticity,
+movement_stochasticity = movement_stochasticity,
+dispersal_stochasticity = dispersal_stochasticity,
+establishment_probability = establishment_probability,
+dispersal_percentage = dispersal_percentage,
+quarantine_areas_file = quarantine_area_file,
+use_quarantine = use_quarantine,
+use_spreadrates = use_spreadrates,
+use_overpopulation_movements = use_overpopulation_movements,
+overpopulation_percentage = overpopulation_percentage,
+leaving_percentage = leaving_percentage,
+leaving_scale_coefficient = leaving_scale_coefficient,
+calibration_method = calibration_method,
+number_of_iterations = number_of_iterations,
+exposed_file_list = exposed_file_list,
+verbose = verbose,
+write_outputs = write_outputs,
+output_folder_path = output_folder_path,
+network_filename = network_filename,
+network_movement = network_movement,
+success_metric = success_metric,
+use_initial_condition_uncertainty = use_initial_condition_uncertainty,
+use_host_uncertainty = use_host_uncertainty,
+weather_type = weather_type,
+temperature_coefficient_sd_file = temperature_coefficient_sd_file,
+precipitation_coefficient_sd_file = precipitation_coefficient_sd_file,
+dispersers_to_soils_percentage = dispersers_to_soils_percentage,
+quarantine_directions = quarantine_directions,
+multiple_random_seeds = multiple_random_seeds,
+file_random_seeds = file_random_seeds,
+use_soils = use_soils,
+soil_starting_pest_file = soil_starting_pest_file,
+start_with_soil_populations = start_with_soil_populations,
+county_level_infection_data = country_level_infection_data)
+
+saveRDS(calib_out, file.path(output_folder_path, "cal21_10_70.RDS"))
+
