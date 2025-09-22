@@ -185,4 +185,5 @@ soil_starting_pest_file = soil_starting_pest_file,
 start_with_soil_populations = start_with_soil_populations,
 county_level_infection_data = county_level_infection_data)
 
+saveRDS(calib_out, file.path(output_folder_path, "cal21_10_75.RDS")
 
