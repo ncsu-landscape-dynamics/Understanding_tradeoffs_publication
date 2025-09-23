@@ -1,3 +1,5 @@
+# This is the first step for simulating data. The important variable is infected_file_list (10). This is where we
+# varied the number of infections. 
 library(PoPS)
 root <- "Z:/Late_Blight/Manuscript_1_Data/simulation/LB"
 inpath <- file.path(root, "inputs")
