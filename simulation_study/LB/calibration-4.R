@@ -1,3 +1,4 @@
+# This is the 4th step. The values for lines 9 - 13, 17 - 21, 23, 28, 31, 32, 79, and 187 have to modified at a minimum.
 library(PoPS)
 library(terra)
 library(doParallel)
@@ -110,7 +111,7 @@ calib_out <- calibrate(
   temp = temp,
   temperature_coefficient_file = temperature_coefficient_file,
   precip = precip,
-  precipitation_coefficient_file = precipitation_coefficent_file,
+  precipitation_coefficient_file = precipitation_coefficient_file,
   model_type = model_type,
   latency_period = latency_period,
   time_step = time_step,
@@ -156,7 +157,7 @@ calib_out <- calibrate(
   use_quarantine = use_quarantine,
   use_spreadrates = use_spreadrates,
   use_overpopulation_movements = use_overpopulation_movements,
-  overpopulation_percentage = overpopulations_percentage,
+  overpopulation_percentage = overpopulation_percentage,
   leaving_percentage = leaving_percentage,
   leaving_scale_coefficient = leaving_scale_coefficient,
   calibration_method = calibration_method,
