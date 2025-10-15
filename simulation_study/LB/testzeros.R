@@ -1,3 +1,8 @@
+library(PoPS)
+library(terra)
+library(doParallel)
+library(foreach)
+
 rootdir <- "Z:/Late_blight/Manuscript_1_Data/simulation/LB"
 
 #infected_years_file <- file.path(rootdir, "inputs/infection/infection_2023.tif")
