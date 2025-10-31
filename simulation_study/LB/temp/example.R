@@ -7,9 +7,9 @@ rootdir <- "inputs"
 
 infected_years_file <- file.path(rootdir, "rasts/infection/2021/r90/med_loc10_90-1.tif")
 number_of_observations <- 321
-prior_number_of_observations <- 257
-prior_means <- file.path(rootdir, "table/params/lb_means_upwardrev.csv")
-prior_cov_matrix = file.path(rootdir, "table/params/lb_cov_mat.csv")
+prior_number_of_observations <- 0
+prior_means <- c(0 ,0, 0, 0, 0, 0, 0, 0)
+prior_cov_matrix = matrix(0, 8, 8)
 params_to_estimate = c(TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE)
 number_of_generations = 7
 generation_size = 1000
