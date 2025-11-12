@@ -5,8 +5,8 @@ library(doParallel)
 
 rootdir <- "inputs"
 
-infected_years_file <- file.path(rootdir, "rasts/infection/2021/r20/mean10loc_20-3_redc.tif")
-number_of_observations <- 82
+infected_years_file <- file.path(rootdir, "rasts/infection/2021/r30/mean10loc_30-3_redc.tif")
+number_of_observations <- 114
 prior_number_of_observations <- 0
 prior_means <- c(0, 0, 0, 0, 0, 0)
 prior_cov_matrix = matrix(0, 8, 8)
@@ -15,7 +15,7 @@ number_of_generations = 7
 generation_size = 1000
 pest_host_table = file.path(rootdir, "table/params/pest_host_table_LB.csv")
 competency_table <- file.path(rootdir, "table/params/competency_table_LB.csv")
-infected_file_list = file.path(rootdir, "rasts/infection/2021/r20/mean10loc_20-3_redc.tif")
+infected_file_list = file.path(rootdir, "rasts/infection/2021/mean2021redczero.tif")
 host_file_list = file.path(rootdir, "rasts/host/host_no_na_rv_2021.tif")
 total_populations_file <- file.path(rootdir, "rasts/all_pop/tot_pop_no_na_rv_2021.tif")
 temp = TRUE
@@ -153,6 +153,8 @@ generate_stochasticity = generate_stochasticity,
 establishment_stochasticity = establishment_stochasticity,
 movement_stochasticity = movement_stochasticity,
 dispersal_stochasticity = dispersal_stochasticity,
+establishment_probability = establishment_probability,
+dispersal_percentage = dispersal_percentage,
 quarantine_areas_file = quarantine_areas_file,
 use_quarantine = use_quarantine,
 use_spreadrates = use_spreadrates,
@@ -184,5 +186,5 @@ start_with_soil_populations = start_with_soil_populations,
 county_level_infection_data = county_level_infection_data)
 
 # Added after starting script
-saveRDS(calib_out, file.path(output_folder_path, "cal21_20-3.RDS"))
+saveRDS(calib_out, file.path(output_folder_path, "cal21_30-3.RDS"))
 
