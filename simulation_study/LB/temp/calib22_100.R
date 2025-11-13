@@ -6,7 +6,7 @@ library(foreach)
 rootdir <- "Z:/Late_blight/Manuscript_1_Data/simulation/LB"
 
 #infected_years_file <- file.path(rootdir, "inputs/infection/infection_2023.tif")
-infected_years_file <- file.path(rootdir, "outputs22/locs10x2/upwdrev/rasts/mean2022redczero.tif")
+infected_years_file <- file.path(rootdir, "outputs22/locs10x2/upwdrev/rasts/infection_upp10.tif")
 number_of_observations = 257
 prior_number_of_observations = 0
 prior_means = c(0, 0, 0, 0, 0, 0, 0, 0)
