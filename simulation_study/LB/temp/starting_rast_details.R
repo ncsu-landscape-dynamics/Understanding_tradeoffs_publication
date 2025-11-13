@@ -21,6 +21,7 @@ y22 <- rast(file.path(rootdir, "Late_blight/Manuscript_1_Data/simulation/LB/inpu
 
 # Then they were run through steps 1 - 3 from the 
 https://github.com/ncsu-landscape-dynamics/Understanding_tradeoffs_publication/tree/main/simulation_study/LB
+# ... which I thought were supposed to be the new starting points for our calibrations.
 
 # Step 3 produces mean, median, etc. and they each have one layer. 
 
@@ -68,7 +69,7 @@ new22 <- rast(file.path(rootdir, "Late_blight/Manuscript_1_Data/simulation/LB/ou
 
 # I was using pops_mean_Year_202* in the all of the simulations as what I thought
 # was the starting infection file because it had way more infections that the 
-# original data for each year.
+# original data for each year (lines 8 and 10).
 
 # All the data reductions (10%, etc.) start with the files on lines 28 and 29. 
 
