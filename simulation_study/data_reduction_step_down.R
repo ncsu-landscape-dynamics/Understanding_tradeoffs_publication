@@ -3,32 +3,29 @@ library(tidyverse)
 
 # Read in raster
 # 2021
-#r1 <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs21/locs10x2/upwdrev/rasts/pops_mean_Year_2021.tif")
-#r1b <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs21/locs10x2/upwdrev/rasts/mean2022redczero.tif")
-
-# 2022
-#r1 <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs22/locs10x2/upwdrev/rasts/pops_mean_Year_2022.tif")
-#r1b <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs22/locs10x2/upwdrev/rasts/mean2022redczero.tif")
-
-# 2023
-#r1 <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs23new/rasts/pops_mean_Year_2023.tif")
-#r1b <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs22/locs10x2/upwdrev/rasts/mean2022redczero.tif")
+ending21 <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs21/locs10x2/upwdrev/rasts/pops_mean_Year_2021.tif")
+start21 <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/inputs/infection/infection_2021_rev_10locs.tif")
 
 
 # Make reduction repeatable
 set.seed(42)
 
+
+
 # Ensure whole numbers
 r1 <- round(r1)
 
-# Which cells to consider
-cwv1 <- which(values(r1)>=1)
+# Which cells to keep
+cells2kp <- which(values(start21)>=1)
+endingcells <- which(values(ending21)>=1)
+
+cells2samplefrom <- endingcells[!endingcells %in% cells2kp]
 
 # Function
-setcll0 <- function(x, inst) {
+setcll0 <- function(cells, x, inst) {
   r_tem = r1
   # Pick X% of cells
-  smlset = sample(cwv1, round(length(cwv1)*x))
+  smlset = sample(cells, round(length(cells)*x))
   print(paste0("x: ", x))
   print(length(smlset))
   # Set selected cells to same value as background
