@@ -1,16 +1,19 @@
 library(terra)
 library(tidyverse)
 
-# Read in raster
-# 2021
-ending21 <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs21/locs10x2/upwdrev/rasts/pops_mean_Year_2021.tif")
-start21 <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/inputs/infection/infection_2021_rev_10locs.tif")
+# Set path as needed
+..
 
+source("code/blight_related/reduce_data_function.R")
+
+# Read in raster
+# Raster to reduce
+red_raster <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs21/locs10x2/upwdrev/rasts/pops_mean_Year_2021.tif")
+# Raster for original locations
+orig_raster <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/inputs/infection/infection_2021_rev_10locs.tif")
 
 # Make reduction repeatable
 set.seed(42)
-
-
 
 # Ensure whole numbers
 r1 <- round(r1)
@@ -21,36 +24,25 @@ endingcells <- which(values(ending21)>=1)
 
 cells2samplefrom <- endingcells[!endingcells %in% cells2kp]
 
-# Function
-setcll0 <- function(cells, x, inst) {
-  r_tem = r1
-  # Pick X% of cells
-  smlset = sample(cells, round(length(cells)*x))
-  print(paste0("x: ", x))
-  print(length(smlset))
-  # Set selected cells to same value as background
-  r_tem[smlset] = 0
-  
-  pct = 100 - (x*100)
-  #print(paste0("pct: ", pct))
-  #return(r_tem)
-  writeRaster(r_tem, paste0("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs23new/rasts/r",
-    pct,"/mean_loc10_",pct, "-", inst, "round.tif"), overwrite=T)
-  #writeRaster(r_tem, paste0("data/temp/new21/r",pct,"/mean_loc10_",
-  #    pct, "-", inst, ".tif"), overwrite=T)
-}
+# Optional
+#outputpath <- "Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs21/locs10x2/upwdrev/rasts/r"
 
+
+# Set up the percentages to remove
 pseq <- seq(0.1, 0.8, by = 0.1)
+
 
 lapply(pseq, \(x) lapply(1:10, \(y) setcll0(x, y)))
 
-# Change the number of zeroes to match number of infected locations
+
+##
+## The rest is probably only necessary for late blight
+
 # Get a list of the reduced rasters
 l2 <- list.files("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs23new/rasts/",
      full.names = T, pattern = "round", recursive = T)
 
-host1 <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/inputs/host/host_no_na_rv_2023.tif")
-
+# Reduce N of zeros.
 setzf <- function(x) {
   r1 = rast(x)
   nm1 = gsub("\\.tif", "", str_sub(x, 82)) # 96)) for '21 and '22
@@ -85,8 +77,7 @@ lapply(l2, \(x) setzf(x))
 # Create a dataframe or file of the counts for each reduced iteration.
 l3 <- gtools::mixedsort(list.files("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs23new/rasts/",
                  full.names = T, pattern = "round_redc", recursive = T))
-                              
-
+                  
 fret1 <- function(x) {
   rtm1 = rast(x)
   df1 = as.data.frame(freq(rtm1))
@@ -98,7 +89,7 @@ fret1 <- function(x) {
 raslis <- lapply(l3, fret1)
 df1 <- data.frame(pct = rep(seq(10,90,by=10), each = 10), index=rep(seq(10,1,by=-1), 9), n_infx = unlist(raslis), n_loc = unlist(lapply(l3, \(x) length(which(values(rast(x) > 0))))))
 
-write.csv(df1, "Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs23new/rasts/infxlocsmeanrndrasts2023.csv", row.names=F)
+write.csv(df1, ..., row.names=F)
 
 
 
