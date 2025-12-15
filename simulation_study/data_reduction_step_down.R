@@ -27,12 +27,11 @@ cells2samplefrom <- endingcells[!endingcells %in% cells2kp]
 # Optional
 #outputpath <- "Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs21/locs10x2/upwdrev/rasts/r"
 
-
 # Set up the percentages to remove
-pseq <- seq(0.1, 0.8, by = 0.1)
+pseq <- seq(0.1, 0.9, by = 0.1)
 
-
-lapply(pseq, \(x) lapply(1:10, \(y) setcll0(x, y)))
+# Use pseq as amount to reduce with 1 - 10 as index for iteration with cells2samplefrom
+lapply(pseq, \(x) lapply(1:10, \(y) reduce_data_function(cells2samplefrom, x, y)))
 
 
 ##
