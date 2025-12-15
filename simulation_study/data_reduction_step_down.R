@@ -31,7 +31,7 @@ cells2samplefrom <- endingcells[!endingcells %in% cells2kp]
 pseq <- seq(0.1, 0.9, by = 0.1)
 
 # Use pseq as amount to reduce with 1 - 10 as index for iteration with cells2samplefrom
-lapply(pseq, \(x) lapply(1:10, \(y) reduce_data_function(cells2samplefrom, x, y)))
+lapply(pseq, \(x) lapply(1:10, \(y) location_reduction(cells2samplefrom, x, y)))
 
 
 ##
