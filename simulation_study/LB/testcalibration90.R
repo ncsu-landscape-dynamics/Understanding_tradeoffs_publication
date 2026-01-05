@@ -3,9 +3,9 @@ library(terra)
 library(foreach)
 library(doParallel)
 
-rootdir <- "inputs"
+rootdir <- "Z:\Late_blight\Manuscript_1_Data\simulation\LB\"
 
-infected_years_file <- file.path(rootdir, "rasts/infection/2021/r90/TEST_90-1round_redc.tif")
+infected_years_file <- file.path(rootdir, "outputs21\locs10x2\upwdrev\rasts\r90\TEST_90-1round_redc.tif")
 number_of_observations <- 261
 prior_number_of_observations <- 0
 prior_means <- c(0, 0, 0, 0, 0, 0)
@@ -13,13 +13,13 @@ prior_cov_matrix = matrix(0, 8, 8)
 params_to_estimate = c(TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE)
 number_of_generations = 5
 generation_size = 100
-pest_host_table = file.path(rootdir, "table/params/pest_host_table_LB.csv")
-competency_table <- file.path(rootdir, "table/params/competency_table_LB.csv")
-infected_file_list = file.path(rootdir, "rasts/infection/2021/infection_2021_rev_10locs.tif")
-host_file_list = file.path(rootdir, "rasts/host/host_no_na_rv_2021.tif")
-total_populations_file <- file.path(rootdir, "rasts/all_pop/tot_pop_no_na_rv_2021.tif")
+pest_host_table = file.path(rootdir, "inputs/parameters/pest_host_table_LB.csv")
+competency_table <- file.path(rootdir, "inputs/parameters/competency_table_LB.csv")
+infected_file_list = file.path(rootdir, "outputs21/locs10x2/upwdrev/rasts/infection_2021_rev_10locs.tif")
+host_file_list = file.path(rootdir, "inputs/host/host_no_na_rv_2021.tif")
+total_populations_file <- file.path(rootdir, "inputs/all_populations/all_pop/tot_pop_no_na_rv_2021.tif")
 temp = TRUE
-temperature_coefficient_file = file.path(rootdir, "rasts/weather/lb_2021_coef_avg.tif")
+temperature_coefficient_file = file.path(rootdir, "inputs/weather/lb_2021_coef_avg.tif")
 precip = FALSE
 precipitation_coefficient_file = ""
 model_type = "SI"
