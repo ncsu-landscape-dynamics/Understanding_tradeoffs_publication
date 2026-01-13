@@ -16,13 +16,13 @@ orig_raster <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/inputs/infec
 set.seed(42)
 
 # Ensure whole numbers
-r1 <- round(r1)
+r1 <- round(red_raster)
 
 # Which cells to keep
-cells2kp <- which(values(start21)>=1)
-endingcells <- which(values(ending21)>=1)
+cells2avoid <- which(values(orig_raster)>=1)
+endingcells <- which(values(red_raster)>=1)
 
-cells2samplefrom <- endingcells[!endingcells %in% cells2kp]
+cells2samplefrom <- endingcells[!endingcells %in% cells2avoid]
 
 # Optional
 #outputpath <- "Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs21/locs10x2/upwdrev/rasts/r"
