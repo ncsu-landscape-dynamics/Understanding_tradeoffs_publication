@@ -9,7 +9,7 @@ location_reduction <- function(cells, reduce_percent, inst) {
   print(paste0("reduce percent: ", reduce_percent))
   print(length(smlset))
   # Set selected cells to same value as background
-  r_tem[smlset] = 0
+  r_tem[smlset] = NA
   
   pct = 100 - (reduce_percent*100)
   print(paste0(outputpath, pct, "/TEST_", pct, "-", inst, "round.tif"))
