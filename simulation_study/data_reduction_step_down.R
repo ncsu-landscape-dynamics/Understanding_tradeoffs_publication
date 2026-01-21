@@ -2,26 +2,33 @@ library(terra)
 library(tidyverse)
 
 # Set path as needed
-..
+path21 <- "Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs21/locs10x2/upwdrev/rasts/"
+path22 <- "Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs22/locs10x2/upwdrev/rasts/"
+path23 <- "Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs23new/rasts/"
 
 source("code/blight_related/reduce_data_function.R")
 
 # Read in raster
 # Raster to reduce
-red_raster <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs21/locs10x2/upwdrev/rasts/pops_mean_Year_2021.tif")
+red_raster <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs22/locs10x2/upwdrev/rasts/pops_mean_Year_2022.tif")
 # Raster for original locations
-orig_raster <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/inputs/infection/infection_2021_rev_10locs.tif")
+#orig_raster <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/inputs/infection/infection_2023_add10.tif")
+orig_raster <- rast("Z:/Late_blight/Manuscript_1_Data/simulation/LB/inputs/infection/infection_2022_rev_10locs.tif")
 
 # Make reduction repeatable
 set.seed(42)
 
 # Ensure whole numbers
-r1 <- round(red_raster)
+red_raster <- round(red_raster)
 
-# Which cells to keep
+# Original infection cells
 cells2avoid <- which(values(orig_raster)>=1)
+
+# Cells in raster that will be reduced
 endingcells <- which(values(red_raster)>=1)
 
+# Create set of cells that have difference of cells of raster to reduce
+# and the set of original infections.
 cells2samplefrom <- endingcells[!endingcells %in% cells2avoid]
 
 # Optional
@@ -33,7 +40,7 @@ pseq <- seq(0.1, 0.9, by = 0.1)
 # Use pseq as amount to reduce with 1 - 10 as index for iteration with cells2samplefrom
 lapply(pseq, \(x) lapply(1:10, \(y) location_reduction(cells2samplefrom, x, y)))
 
-
+##
 ##
 ## The rest is probably only necessary for late blight
 
@@ -48,12 +55,7 @@ setzf <- function(x) {
   pct1 = str_sub(nm1, 1,2)
   print(paste0("name ",nm1))
   print(paste0("pct ", pct1))
-  # Get counts of locations
-  td1 = as.data.frame(freq(r1))
-  td1 = td1[-1,]
-  print(td1)
-  n_locs = sum(td1$count)
-  print(n_locs)
+
   # New raster for assigning NA and reassigning 0
   r2 = round(r1)
   r2 = crop(r2, host1, mask = T)  
