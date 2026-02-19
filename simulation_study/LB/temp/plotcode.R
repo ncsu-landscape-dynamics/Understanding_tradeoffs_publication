@@ -1,6 +1,9 @@
 library(tidyverse)
 
 set.seed(42)
+
+# This creates boxplots. The lines with ribbons are on line 1318
+# Files of the calibrations to get the means and cov. matrix
 l2 <- gtools::mixedsort(list.files("Z:/Late_blight/temp/simcal/", full.names = T,
   pattern = "cal"))
 l2 <- l2[-c(which(grepl("100", l2)),329)]
@@ -1311,34 +1314,79 @@ ggsave("../Pictures/early_figs/ms1/imagesforrevision/NatDpDistBoxplot.jpg",
 dtmod3 <- dunn.test(smlbig$Percent.Natural.Dispersal, as.factor(smlbig$Pct), 
                     method = "holm")
 
-ggplot(data = smlbig ) + geom_boxplot(aes(y = Percent.Natural.Dispersal, x= Pct, 
-    group = Pct)) + scale_x_reverse() + theme_minimal() + 
-  theme(panel.background = element_blank(), panel.grid = element_blank()) +
-  ggtitle("Percent Natural Dispersal all years combined") + ylab("Percent Natural Dispersal") 
-  #annotate("text", x = 30, y = 11.1, label = "*", fontface = "bold", size = 8)+
-  #annotate("text", x = 20, y = 11.1, label = "*", fontface = "bold", size = 8) +
-  annotate("text", x = 10, y = 10, label = "*", fontface = "bold", size = 8) +
-  annotate("text", x = 98, y = 0, label = "*", fontface = "bold", size = 8) +
-  annotate("text", x = 80, y = 0, label = "= statistically different from 100%",
-           fontface = "bold")
 
-ggsave("../Pictures/early_figs/ms1/imagesforrevision/PctNatDispBoxplot.jpg",
-       width = 5, height = 5, units = "in", dpi = "retina")
+# Make geom_smooth for percent nat. dispersla and athropogenci distance
+# Files of the calibrations to get the means and cov. matrix
+l1 <- gtools::mixedsort(list.files("Z:/Late_blight/temp/simcal/", full.names = T))
+grp1 <- seq(10, 90, by = 10)
 
-dtmod4 <- dunn.test(smlbig$Anthropogenic.Dispersal.Distance, as.factor(smlbig$Pct), 
-                      method = "hs")
+l1 <- l1[-c(11,22,33,44,55,66,77,88,99,100,281)]
+
+# Get summary of the posteriors
+cdff1 <- function(x) {
+  l2 = l1[grepl(paste0("_",x), l1)]
+  print(l2)
+  convals = lapply(l2, readRDS)
+  mat1 = matrix(0, ncol = 8, nrow = length(l2))
+  for (i in 1:length(l2)) {
+    mat1[i,] = convals[[i]]$posterior_means
+  }
+  #print(mat1)
+  all_means <- round(colMeans(mat1), 4)
   
-ggplot(data = smlbig ) + geom_boxplot(aes(y = Anthropogenic.Dispersal.Distance, 
-    x= Pct, group = Pct)) + scale_x_reverse() + theme_minimal() + 
-    theme(panel.background = element_blank(), panel.grid = element_blank()) +
-    ggtitle("Anthropogenic Dispersal Distance all years combined") + 
-    ylab("Anthropogenic Dispersal Distance") 
-    #annotate("text", x = 30, y = 11.1, label = "*", fontface = "bold", size = 8)+
-    #annotate("text", x = 20, y = 11.1, label = "*", fontface = "bold", size = 8) +
-    annotate("text", x = 10, y = 750, label = "*", fontface = "bold", size = 8) +
-    annotate("text", x = 98, y = -15, label = "*", fontface = "bold", size = 8) +
-    annotate("text", x = 80, y = -15, label = "= statistically different from 100%",
-             fontface = "bold")
-ggsave("../Pictures/early_figs/ms1/imagesforrevision/AnthDispDistboxplot.jpg",
-       width = 5, height = 5, units = "in", dpi = "retina")  
+  median_v <- mat1 %>% as.data.frame() 
+  
+  #writeRaster(median_run, file.path(output_path, paste0("pops_median_Year_", i, ".tif")), overwrite = TRUE, gdal = c("COMPRESS=NONE"))
+  #write.csv(yearly_stats, (file.path(output_path, paste0("yearly_stats", i, ".csv"))))
+  return(median_v)
+}
+
+second_sum <- lapply(grp1, \(x) cdff1(x))
+second_sum <- do.call(rbind, second_sum)
+second_sum <- data.frame(grp = rep(grp1, each =3), second_sum)
+second_sum$pct <- second_sum$grp#str_sub(first_sum$grp, 4,5)
+
+primean <- read.csv("Z:/Late_blight/Manuscript_1_Data/simulation/LB/inputs/parameters/lb_means_upwardrev.csv")
+primean <- rbind(9, primean)
+ormat <- matrix(rep(primean$X16, nrow(second_sum)), ncol = 8, byrow=T)
+second_sum[,11:18] <- ormat
+colnames(second_sum)[11:18] <- paste0("prior_means",1:8)
+cal22 <- readRDS("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs22/locs10x2/upwdrev/calib/cal22_100-1.RDS")
+second_sum[,19:26] <- matrix(rep(cal22$posterior_means, nrow(second_sum)), ncol = 8, byrow = T)
+colnames(second_sum)[19:26] <- paste0("calibration_means",1:8)
+temdf <- data.frame(100, cal22$posterior_means[1], cal22$posterior_means[2],
+                    cal22$posterior_means[3], cal22$posterior_means[4], NA, NA, 
+                    NA, NA, cal22$posterior_means[1], cal22$posterior_means[2],
+                    cal22$posterior_means[3], cal22$posterior_means[4], NA, NA, NA, NA,
+                    NA, NA, NA, NA, NA, NA, NA, NA, NA)
+colnames(temdf) <- colnames(second_sum)
+second_sum <- rbind(second_sum, temdf)
+
+df3 <- second_sum %>% select(c(1,4, 27))
+#df3 <- rbind(df3, c(0.96, 100))
+df3$grp <- as.numeric(df3$grp)
+ggplot() + geom_point(data=df3, aes(x = grp, y = V3)) + scale_x_reverse() + 
+  labs(x = "Pct of Infection Locations Remaining", y = "Percent Natural Dispersal") +
+  theme_minimal() + theme(panel.grid = element_blank()) + 
+  geom_smooth(data = first_sum %>% filter(measure == "mean"), 
+              aes(x = grp, y = V3))
+  
+ggsave("../Pictures/early_figs/ms1/imagesforrevision/pctnatdispmeanssmooth.jpg", 
+       width = 5, height = 5, units ="in", dpi = "retina")
+
+df3 <- second_sum %>% select(c(1,5))
+#df3 <- rbind(df3, c(5862, 100))
+df3$grp <- as.numeric(df3$grp)
+ggplot() + geom_point(data=df3, aes(x = grp, y = V4)) + scale_x_reverse() + 
+  labs(x = "Pct of Infection Locations Remaining", y = "Anthropogenic Dispersal Distance") +
+  theme_minimal() + theme(panel.grid = element_blank()) +
+  geom_smooth(data = first_sum %>% filter(measure == "mean"), 
+              aes(x = grp, y = V4))
+
+ggsave("../Pictures/early_figs/ms1/imagesforrevision/dispdistmean23round.png", 
+       width = 5, height =5, units = "in", dpi = "retina")
+
+
+
+
 
