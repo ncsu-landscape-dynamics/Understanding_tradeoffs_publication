@@ -11,7 +11,7 @@ l2 <- l2[!grepl("TEST", l2)]
 
 # 100% data
 cal21100 <- readRDS("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs21/locs10x2/upwdrev/calib/cal21_100.RDS")
-cal22100 <- readRDS("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs22/locs10x2/upwdrev/calib/cal21_100-1.RDS")
+cal22100 <- readRDS("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs22/locs10x2/upwdrev/calib/cal22_100-1.RDS")
 cal23100 <- readRDS("Z:/Late_blight/Manuscript_1_Data/simulation/LB/outputs23new/calib/cal23_1001.RDS")
 
 l3 <- gtools::mixedsort(list.files("Z:/Late_blight/temp/simcal/", full.names = T))
