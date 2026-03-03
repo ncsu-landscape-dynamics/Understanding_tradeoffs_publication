@@ -1,5 +1,5 @@
 # The tables created here are used to calculate the values that the bar charts
-# in Fig. 5 rely on. They take daily WRM rasters and create matrices. Then the 
+# in Fig. 3 rely on. They take daily WRM rasters and create matrices. Then the 
 # lists of matrices are divided by growing season and region. 
 
 library(data.table)
