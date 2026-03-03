@@ -15,7 +15,7 @@ To forecast SOD with PoPS, we used infection data collected by the Oregon Depart
 
 SOD was modeled with a WRM that used the same range of scores as that of late blight, however with the thresholds at different precipitation and temperature values than those of late blight. Mean temperature, calculated from Daymet temperature data, and Daymet precipitation were used in the if-then logic for the WRM for SOD. 
 
-The SDM for SOD is the same as PoPS.
+The SDM for SOD used the same predictors as late blight, except the mean of relative humidity. That was only used for late blight. SDMs for both pathosystems used two models in the ensemble: GLM and MaxEnt.
 
 ### Guide
 This is a sort of map to indicate how the scripts above are used to create the results for the three models. If a script above doesn't appear in the guide, then it was probably used to create a figure or do some ancillary calculations, like `SOD_WRM_temp_curve_threshold_estimation.R`.
