@@ -1,6 +1,7 @@
 # This is the script that calculates the weather coefficent and WRM for late blight.
 # It relies on two separately defined functions. It is parallelized for speed, but can
 # still take a day or two to finish, depending on extent and resolution. 
+# The outputs from this are used in both PoPS and the WRM.
 
 library(terra)
 library(doParallel)
